@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'nanumPen';
+  src: url('./assets/fonts/nanumPen.ttf');
+  font-weight: 400;
+  font-style: normal;
+}

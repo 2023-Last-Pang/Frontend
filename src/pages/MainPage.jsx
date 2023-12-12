@@ -4,6 +4,7 @@ import MessageModal from '../components/Message/MessageModal';
 
 function MainPage() {
   const [openMessage, setOpenModal] = useState(false);
+
   const handleOpenMessage = () => {
     setOpenModal(!openMessage);
   };
@@ -13,7 +14,7 @@ function MainPage() {
       <div className="bg-[#193D60]">
         <MessageBtn handleOpenMessage={handleOpenMessage} />
       </div>
-      {openMessage && <MessageModal />}
+      {openMessage && <MessageModal handleOpenMessage={handleOpenMessage} />}
     </>
   );
 }

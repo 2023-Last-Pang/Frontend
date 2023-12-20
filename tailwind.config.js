@@ -4,7 +4,11 @@ export default {
   theme: {
     extend: {},
     fontFamily: {
-      Giants: ['HSJiptokki-Black'],
+      PartialSans: ['PartialSansKR-Regular'],
+      Jiptokki: ['HSJiptokki-Black'],
+      Taebaek: ['TAEBAEKmilkyway'],
+      Consolas: ['Consolas'],
+      Wanju: ['TTWanjudaedunsancheB'],
     },
   },
   plugins: [],

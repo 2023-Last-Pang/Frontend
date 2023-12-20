@@ -1,8 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{html,js,jsx}'],
+  content: ['./src/**/*.{html,js,jsx}'],
   theme: {
     extend: {},
+    fontFamily: {
+      PartialSans: ['PartialSansKR-Regular'],
+      Jiptokki: ['HSJiptokki-Black'],
+      Taebaek: ['TAEBAEKmilkyway'],
+      Consolas: ['Consolas'],
+      Wanju: ['TTWanjudaedunsancheB'],
+    },
   },
   plugins: [],
 };

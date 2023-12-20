@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @font-face {
+  font-family: 'Climate';
+  src: url('./src/fonts/Climate.otf');
+}
+
+@font-face {
   font-family: 'nanumPen';
   src: url('./assets/fonts/nanumPen.ttf');
   font-weight: 400;

@@ -17,6 +17,7 @@ export default {
         Consolas: ['Consolas'],
         Wanju: ['TTWanjudaedunsancheB'],
         nanumPen: ['nanumPen', 'nanumPen'],
+        Climate: ['Climate'],
       },
     },
   },

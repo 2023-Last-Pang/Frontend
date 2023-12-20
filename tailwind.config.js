@@ -2,13 +2,22 @@
 export default {
   content: ['./src/**/*.{html,js,jsx}'],
   theme: {
-    extend: {},
-    fontFamily: {
-      PartialSans: ['PartialSansKR-Regular'],
-      Jiptokki: ['HSJiptokki-Black'],
-      Taebaek: ['TAEBAEKmilkyway'],
-      Consolas: ['Consolas'],
-      Wanju: ['TTWanjudaedunsancheB'],
+    extend: {
+      colors: {
+        topColor: '#0D2847',
+        bottomColor: '#2C5B83',
+      },
+      backgroundImage: {
+        'message-image': "url('./src/assets/images/messageModal.png')",
+      },
+      fontFamily: {
+        PartialSans: ['PartialSansKR-Regular'],
+        Jiptokki: ['HSJiptokki-Black'],
+        Taebaek: ['TAEBAEKmilkyway'],
+        Consolas: ['Consolas'],
+        Wanju: ['TTWanjudaedunsancheB'],
+        nanumPen: ['nanumPen', 'nanumPen'],
+      },
     },
   },
   plugins: [],

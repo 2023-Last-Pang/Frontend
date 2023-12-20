@@ -55,6 +55,7 @@ function GalleryTest() {
           <div className="inset-0 flex items-center justify-center bg-white opacity-70">
             <img
               src={image}
+              loading="lazy"
               alt={`img${index}`}
               className="h-full w-full object-cover"
             />
@@ -71,7 +72,7 @@ function GalleryTest() {
               setActiveImageIndex(index);
               setModalVisible(true);
             }}
-            images={images}
+            images={images} // 현재 보여지는 이미지 배열을 넘겨줍니다.
             onClose={handleSliderClose}
           />
         </div>

@@ -1,4 +1,4 @@
-// Slider component
+// Slider 컴포넌트
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -7,7 +7,13 @@ import 'swiper/css/navigation';
 import './styles.css';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-function Slider({ onImageClick, images }) {
+// Import images dynamically using import.meta.glob
+const importAll = (r) => r.keys().map(r);
+const aprilImages = importAll(
+  import.meta.glob('../../../public/img/April/*.jpg'),
+);
+
+function Slider({ onImageClick }) {
   return (
     <Swiper
       spaceBetween={30}
@@ -22,7 +28,7 @@ function Slider({ onImageClick, images }) {
       navigation
       modules={[Autoplay, Pagination, Navigation]}
       className="mySwiper">
-      {images.map((src, index) => (
+      {aprilImages.map((src, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <SwiperSlide key={index}>
           <div
@@ -31,7 +37,13 @@ function Slider({ onImageClick, images }) {
             tabIndex={0}
             onClick={() => onImageClick(index)}
             onKeyDown={(e) => e.key === 'Enter' && onImageClick(index)}>
-            <img src={src} className="h-full w-full" alt={`img${index}`} />
+            <img
+              src={src.default}
+              loading="lazy"
+              className="h-full w-full"
+              alt={`img${index}`}
+            />
+            <div className="swiper-lazy-preloader swiper-lazy-preloader-white" />
           </div>
         </SwiperSlide>
       ))}

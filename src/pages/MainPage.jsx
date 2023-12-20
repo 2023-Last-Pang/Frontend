@@ -2,16 +2,17 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react';
-// import AuthenticationModal from '../components/Message/AuthenticationModal';
+import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
 
 function MainPage() {
-  // const [openAuthentication, setOpenAuthentication] = useState(false);
+  const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false); // 메시지 모달 상태 추가
+  // const [role, setRole] = useState("");
 
   const handleOpenMessage = () => {
     setOpenMessage(!openMessage);
@@ -32,14 +33,24 @@ function MainPage() {
     setMessages([...messages, newMessage]);
   };
 
-  // const handleOpenAuthentication = () => {
-  //   setOpenAuthentication(!openAuthentication);
-  // };
+  const handleOpenAuthentication = () => {
+    setOpenAuthenticationModal(!openAuthenticationModal);
+  };
 
   return (
     <>
-      <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
-        <p className="text-white">메세지를 보시려면 테커 코드 혹은 팀준 코드를 입력해주세요</p>
+      <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
+        <div className="flex items-center justify-center">
+          <p className="mr-5 text-white">메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요</p>
+          <button 
+            type="button"
+            className="link-style" 
+            onClick={() => handleOpenAuthentication()}
+          >
+            인증 코드 입력
+          </button>
+        </div>
+        
         <MessageBtn handleOpenMessage={handleOpenMessage} />
         {messages.map((msg, index) => (
           <div
@@ -57,7 +68,13 @@ function MainPage() {
         ))}
       </div>
 
-      {/* {openAuthentication && <AuthenticationModal />} */}
+      {openAuthenticationModal && 
+        <AuthenticationModal 
+          handleOpenAuthentication={handleOpenAuthentication}
+          // setRole={setRole}
+        />
+      
+      }
       {openMessage && (
         <MessageModal
           handleOpenMessage={handleOpenMessage}

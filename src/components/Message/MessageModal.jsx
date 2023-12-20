@@ -12,7 +12,7 @@ export default function MessageModal({ handleOpenMessage, addMessage, message, c
             <p className="text-lg">{message.content.message}</p>
             <p className="text-right font-nanumPen">- {message.content.userName} -</p>
           </div>
-          <button 
+          <button
             type="button"
             onClick={() => closeModal()} 
             className="bottom-0 px-4 h-8 mt-1 py-1 text-sm text-[#e26a68] bg-white rounded hover:bg-[#e7e7e7] shadow-md"

@@ -20,6 +20,7 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
     console.log(message);
     handleOpenMessage();
   }
+  
   return (
     <>
       <input

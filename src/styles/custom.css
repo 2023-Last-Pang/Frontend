@@ -27,3 +27,9 @@
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* 별 모양 클리핑 */
   animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out 3s;
 }
+
+.link-style {
+  color: #00A3FF;        /* 파란색 텍스트 */
+  text-decoration: underline; /* 밑줄 추가 */
+  cursor: pointer;    /* 마우스 오버 시 포인터 커서 표시 */
+}

@@ -40,8 +40,8 @@ function MainPage() {
   return (
     <>
       <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
-        <div className="flex items-center justify-center">
-          <p className="mr-5 text-white">메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요</p>
+        <div className="flex items-center justify-center p-5">
+          <p className="mr-3 text-white">메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요</p>
           <button 
             type="button"
             className="link-style" 
@@ -49,9 +49,11 @@ function MainPage() {
           >
             인증 코드 입력
           </button>
+
+          {/* <div className="flex justify-end">
+            <p className="text-white">팀준인</p>
+          </div> */}
         </div>
-        
-        <MessageBtn handleOpenMessage={handleOpenMessage} />
         {messages.map((msg, index) => (
           <div
             key={msg.id}
@@ -62,10 +64,16 @@ function MainPage() {
               animationDelay: `0s, ${3 + Math.floor(index / 3) * 0.5}s`,
             }}
             onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
-          >
-            {/* 점 스타일 */}
-          </div>
+          />
         ))}
+
+        <MessageBtn handleOpenMessage={handleOpenMessage} />
+        {openMessage && (
+        <MessageModal
+          handleOpenMessage={handleOpenMessage}
+          addMessage={addMessage}
+        />
+      )}
       </div>
 
       {openAuthenticationModal && 
@@ -75,13 +83,7 @@ function MainPage() {
         />
       
       }
-      {openMessage && (
-        <MessageModal
-          handleOpenMessage={handleOpenMessage}
-          addMessage={addMessage}
-        />
-      )}
-
+      
       {showMessageModal && selectedMessage && (
         <MessageModal
           message={selectedMessage}

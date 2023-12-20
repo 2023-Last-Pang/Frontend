@@ -1,19 +1,10 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable no-console */
 /* eslint-disable react/style-prop-object */
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+import InputAuth from './InputAuth';
 
 export default function AuthenticationModal({ handleOpenAuthentication }) {
-  const [roleInput, setRoleInput] = useState("");
-
-  function handleRole(role) {
-    setRoleInput(role);
-  }
-
-  function handleSubmit() {
-    /* eslint-disable no-console */
-    console.log('role: ', roleInput);
-  }
-
   return (
     <div className="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen text-center bg-black bg-opacity-40">
       <div className="flex flex-col justify-between h-40 p-3 bg-white rounded-md w-96">
@@ -21,7 +12,11 @@ export default function AuthenticationModal({ handleOpenAuthentication }) {
           <div className="w-72">
             <p>슬랙 채널에 공유된 인증코드를 입력해주세요</p>
           </div>
-          <div
+          <InputAuth 
+            handleOpenAuthentication={handleOpenAuthentication}
+            color="#2B5981"
+          />
+          {/* <div
             className="mt-2 ml-2 border-b-2 w-72 focus-within:border-blue-500"
           >
             <input 
@@ -47,10 +42,9 @@ export default function AuthenticationModal({ handleOpenAuthentication }) {
             onClick={() => handleSubmit()}
           >
             완료
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
   );
 }
-// onChange={() => handleRole()}

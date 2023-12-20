@@ -10,6 +10,9 @@ export default {
       fontFamily: {
         nanumPen: ['nanumPen', 'nanumPen'],
       },
+      backgroundImage: {
+        'message-image': "url('./src/assets/images/messageModal.png')",
+      },
     },
   },
   plugins: [],

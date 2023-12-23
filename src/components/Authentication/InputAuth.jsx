@@ -21,6 +21,7 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
         .then((response) => {
           alert('로그인 성공');
           localStorage.setItem('token', response.data.accessToken);
+          localStorage.setItem('role', response.data.role);
           window.location.reload();
         });
     } catch (error) {

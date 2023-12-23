@@ -26,7 +26,7 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
         .then((response) => {
           console.log(response);
           alert('메세지 작성 완료!');
-          // window.location.reload();
+          window.location.reload();
         });
     } catch (error) {
       console.log(error);
@@ -38,9 +38,6 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
       alert("닉네임과 메세지 내용을 모두 입력해주세요!");
       return;
     }
-    // addMessage({userName, message});
-    console.log(userName);
-    console.log(message);
     addMessageAPI();
   }
 

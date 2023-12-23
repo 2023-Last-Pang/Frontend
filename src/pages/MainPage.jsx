@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -5,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
+import apiV1Instance from '../apiV1Instance';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -18,10 +20,26 @@ function MainPage() {
   const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
   const joonRole = import.meta.env.VITE_JOON_ROLE;
 
+  const getMessageAPI = async () => {
+    try {
+      const response = await apiV1Instance.get('/messages');
+      const fetchedMessages = response.data.data.map(msg => ({
+        ...msg,
+        x: Math.random() * 100, // 랜덤 x 위치
+        y: Math.random() * 50, // 랜덤 y 위치
+      }));
+      setMessages(fetchedMessages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     setHasToken(!!token);
     if (token) {
+      getMessageAPI();
+      
       const role = localStorage.getItem('role');
       if (role === techeerRole) {
         setAuthRole('테커인');
@@ -42,10 +60,11 @@ function MainPage() {
 
   const addMessage = (msgContent) => {
     const newMessage = {
-      id: Date.now(), // 현재 시간을 기반으로 한 고유 ID 생성
-      content: msgContent,
+      nickname: msgContent.userName,
+      content: msgContent.message,
       x: Math.random() * 100, // 랜덤 x 위치
-      y: Math.random() * 100, // 랜덤 y 위치
+      y: Math.random() * 60, // 랜덤 y 위치
+      isNew: true, // 새로 추가된 메시지 표시
     };
     setMessages([...messages, newMessage]);
   };
@@ -81,12 +100,12 @@ function MainPage() {
         {hasToken &&
           messages.map((msg, index) => (
             <div
-              key={msg.id}
-              className="absolute text-white cursor-pointer star"
+              key={msg.createdAt}
+              className={`absolute text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
-                animationDelay: `0s, ${3 + Math.floor(index / 3) * 0.5}s`,
+                animationDelay: `0s, ${Math.floor(index % 3) * 5}s`,
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             />

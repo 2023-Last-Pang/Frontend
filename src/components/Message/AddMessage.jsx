@@ -26,10 +26,12 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
         .then((response) => {
           console.log(response);
           alert('메세지 작성 완료!');
-          window.location.reload();
+          addMessage({userName, message});
+          handleOpenMessage();
         });
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.errors[0].constraints.maxLength);
+      console.log(error.response.data.errors[0].constraints.maxLength);
     }
   };
 

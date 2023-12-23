@@ -1,8 +1,8 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
-import axios from 'axios';
 import { useState } from 'react';
+import apiV1Instance from '../../apiV1Instance';
 
 export default function InputAuth({ handleOpenAuthentication, color }) {
   const [role, setRole] = useState('');
@@ -14,8 +14,8 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
 
   const authAPI = async () => {
     try {
-      await axios
-        .post('http://localhost:8000/api/v1/auth/verify', {
+      await apiV1Instance
+        .post('/auth/verify', {
           code: role,
         })
         .then((response) => {

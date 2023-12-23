@@ -1,8 +1,12 @@
 /* eslint-disable prettier/prettier */
-// import RetryAuth from '../Authentication/RetryAuth';
+import RetryAuth from '../Authentication/RetryAuth';
 import AddMessage from './AddMessage';
 
 export default function MessageModal({ handleOpenMessage, addMessage, message, closeModal }) {
+  const role = localStorage.getItem('role');
+  const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
+  const joonRole = import.meta.env.VITE_JOON_ROLE;
+
   if (message) {
     return (
       <div className="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen text-center bg-black bg-opacity-20">
@@ -23,12 +27,13 @@ export default function MessageModal({ handleOpenMessage, addMessage, message, c
         </div>
       </div>
     );
-  } 
+  }
+  
   return (
     <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full">
       <div className="flex flex-col justify-center bg-cover mt-[30rem] h-80 w-84 bg-message-image">
-        {/* <RetryAuth handleOpenMessage={handleOpenMessage} color="#e26a68"/> */}
-        <AddMessage handleOpenMessage={handleOpenMessage} addMessage={addMessage}/>
+        {role === techeerRole && <RetryAuth handleOpenMessage={handleOpenMessage} color="#e26a68"/>}
+        {role === joonRole && <AddMessage handleOpenMessage={handleOpenMessage} addMessage={addMessage}/>}
       </div>
     </div>
   );

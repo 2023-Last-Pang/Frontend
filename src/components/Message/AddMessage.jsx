@@ -23,8 +23,7 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
           nickname: userName,
           content: message,
         })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           alert('메세지 작성 완료!');
           addMessage({userName, message});
           handleOpenMessage();

@@ -60,10 +60,11 @@ function MainPage() {
 
   const addMessage = (msgContent) => {
     const newMessage = {
+      createdAt: Date.now(), // 현재 시간을 기반으로 한 고유 ID 생성
       nickname: msgContent.userName,
       content: msgContent.message,
       x: Math.random() * 100, // 랜덤 x 위치
-      y: Math.random() * 60, // 랜덤 y 위치
+      y: Math.random() * 50, // 랜덤 y 위치
       isNew: true, // 새로 추가된 메시지 표시
     };
     setMessages([...messages, newMessage]);

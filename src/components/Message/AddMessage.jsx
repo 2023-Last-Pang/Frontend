@@ -1,5 +1,8 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 import { useState } from 'react';
+import apiV1Instance from '../../apiV1Instance';
 
 export default function AddMessage({ handleOpenMessage, addMessage }) {
   const [userName, setUserName] = useState('');
@@ -13,12 +16,32 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
     setMessage(content);
   }
 
+  const addMessageAPI = async () => {
+    try {
+      await apiV1Instance
+        .post('/messages', {
+          nickname: userName,
+          content: message,
+        })
+        .then((response) => {
+          console.log(response);
+          alert('메세지 작성 완료!');
+          // window.location.reload();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   function handleSubmit() {
-    /* eslint-disable no-console */
-    addMessage({userName, message});
+    if (!userName || !message) {
+      alert("닉네임과 메세지 내용을 모두 입력해주세요!");
+      return;
+    }
+    // addMessage({userName, message});
     console.log(userName);
     console.log(message);
-    handleOpenMessage();
+    addMessageAPI();
   }
 
   return (

@@ -70,15 +70,15 @@ function ClockTest() {
   }, []);
 
   return (
-    <div className="flex h-screen w-screen">
+    <>
       {/* 카운트다운 */}
       {startCountDown != true && (
-        <motion.span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text font-Taebaek text-8xl tracking-[9px] text-transparent">
+        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-8xl tracking-[9px] text-transparent">
           {timeDifference}
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{
@@ -95,7 +95,7 @@ function ClockTest() {
         </div>
       )}
       {complete && <Confetti className="h-full w-full" />}
-    </div>
+    </>
   );
 }
 

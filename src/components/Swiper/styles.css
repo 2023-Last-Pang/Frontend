@@ -1,0 +1,108 @@
+#app {
+  height: 100%;
+}
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(5px);
+  font-family:
+    Helvetica Neue,
+    Helvetica,
+    Arial,
+    sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+.swiper {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: 100%;
+}
+
+/* .swiper-wrapper {
+  backdrop-filter: blur(10px);
+  background-color: transparent;
+} */
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  padding: 2rem;
+  border: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 5;
+  color: var(--text-purple);
+  background: rgba(200, 199, 199, 0.8);
+  border-radius: 50%;
+  transition: 0.3s;
+  opacity: 0.5;
+}
+
+.swiper-button-prev {
+  left: 2rem;
+}
+
+.swiper-button-next {
+  right: 2rem;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 1.5rem; /* 아이콘 크기를 1.1rem에서 1.5rem으로 조정 */
+  font-weight: bold; /* 아이콘의 두께를 더 굵게 조정 */
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  opacity: 1; /* 호버 시 불투명도를 100%로 설정 */
+  background: rgba(200, 199, 199, 1); /* 호버 시 배경색을 불투명하게 설정 */
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  display: none;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0.2;
+}
+
+.modal-active {
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+  background-color: transparent;
+}
+
+.modal-background {
+  background: #fff;
+  opacity: 1;
+}

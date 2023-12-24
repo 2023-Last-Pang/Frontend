@@ -7,5 +7,7 @@
   "printWidth": 80,
   "arrowParens": "always",
   "endOfLine": "auto",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
   "plugins": ["prettier-plugin-tailwindcss"]
 }

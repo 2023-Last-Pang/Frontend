@@ -1,17 +1,43 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 import { useState } from 'react';
+import apiV1Instance from '../../apiV1Instance';
 
 export default function InputAuth({ handleOpenAuthentication, color }) {
-  const [roleInput, setRoleInput] = useState("");
+  const [role, setRole] = useState('');
+  const [isError, setIsError] = useState(false);
 
-  function handleRole(role) {
-    setRoleInput(role);
+  function handleRole(code) {
+    setRole(code);
   }
 
-  function handleSubmit() {
-    console.log('role: ', roleInput);
-  }
+  const authAPI = async () => {
+    try {
+      await apiV1Instance
+        .post('/auth/verify', {
+          code: role,
+        })
+        .then((response) => {
+          alert('로그인 성공');
+          localStorage.setItem('token', response.data.accessToken);
+          localStorage.setItem('role', response.data.role);
+          window.location.reload();
+        });
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!role) {
+      alert('코드를 입력해주세요.');
+      return;
+    }
+    setIsError(false);
+    authAPI();
+  };
 
   return (
     <div>
@@ -23,27 +49,30 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
           placeholder="인증코드 입력"
         />
       </div>
-      <div className="absolute text-xs text-red-600">
-        <span>앗! 인증코드가 올바르지 않아요</span><br/>
-      </div>
-      
-      <div className="flex justify-end mt-8">
-          <button 
-            type="button"
-            className={`px-4 h-8 py-1 mr-3 text-sm text-[${color}] bg-white rounded hover:bg-[#e7e7e7] shadow-md`}
-            onClick={() => handleOpenAuthentication()}
-          >
-            취소
-          </button>
-
-          <button 
-            type="submit"
-            className={`px-4 h-8 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
-            onClick={() => handleSubmit()}
-          >
-            완료
-          </button>
+      {isError && (
+        <div className="absolute text-xs text-red-600">
+          <span>앗! 인증코드가 올바르지 않아요</span>
+          <br />
         </div>
+      )}
+
+      <div className="flex justify-end mt-8">
+        <button
+          type="button"
+          className={`px-4 h-8 py-1 mr-3 text-sm text-[${color}] bg-white rounded hover:bg-[#e7e7e7] shadow-md`}
+          onClick={() => handleOpenAuthentication()}
+        >
+          취소
+        </button>
+
+        <button
+          type="submit"
+          className={`px-4 h-8 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
+          onClick={() => handleSubmit()}
+        >
+          완료
+        </button>
+      </div>
     </div>
   );
 }

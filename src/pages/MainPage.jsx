@@ -1,7 +1,14 @@
 import React from 'react';
+import AndrewMessage from '../components/AndrewMessage';
+import JoonMessage from '../components/JoonMessage';
 
 function MainPage() {
-  return <div className="text-9xl">화이팅</div>;
+  return (
+    <div className="flex">
+      <AndrewMessage />
+      <JoonMessage />
+    </div>
+  );
 }
 
 export default MainPage;

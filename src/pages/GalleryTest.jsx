@@ -76,7 +76,7 @@ function GalleryTest() {
         }`}>
         {galleryData.map((gallery, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className="flex h-[28rem]">
+          <div key={index} className="flex h-[20rem] ">
             <div
               role="button"
               tabIndex={0}
@@ -92,23 +92,19 @@ function GalleryTest() {
                   alt={`img${index}`}
                   className="h-full w-full transform object-cover object-center transition duration-300 ease-in-out hover:scale-105"
                 />
-                <span className="absolute top-1/2 z-10 -translate-y-1/2 transform text-3xl font-bold text-white drop-shadow-2xl">
+                <span className="absolute top-1/2 z-10 -translate-y-1/2 transform rounded bg-gray-500 bg-opacity-50 p-2 text-3xl font-bold text-white drop-shadow-md">
                   {textData[Math.floor(index / 2)][index % 2]}
                 </span>
               </div>
             </div>
             {activeSlider === gallery.slider && gallery.slider && (
-              <div
-                // className="fixed inset-0 z-10"
-                style={{ zIndex: activeZIndex }}>
-                <div className="relative max-w-3xl p-4">
-                  {gallery.slider &&
-                    React.createElement(gallery.slider, {
-                      onImageClick: handleImageClick,
-                      onClose: handleSliderClose, // 여기에서 handleSliderClose를 전달합니다.
-                      images: [gallery.image],
-                    })}
-                </div>
+              <div className="relative max-w-3xl p-4">
+                {gallery.slider &&
+                  React.createElement(gallery.slider, {
+                    onImageClick: handleImageClick,
+                    onClose: handleSliderClose, // 여기에서 handleSliderClose를 전달합니다.
+                    images: [gallery.image],
+                  })}
               </div>
             )}
           </div>

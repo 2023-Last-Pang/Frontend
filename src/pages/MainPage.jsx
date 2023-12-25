@@ -6,6 +6,9 @@ import React, { useState, useEffect } from 'react';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
+import sunSample from '../assets/img/sun.svg';
+import moonSample from '../assets/img/moon.svg';
+import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 
 function MainPage() {
@@ -49,6 +52,108 @@ function MainPage() {
     }
   }, []);
 
+  // Date 객체 시간
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // 배경색 상태
+  const [backgroundColor, setBackgroundColor] = useState();
+
+  // 배경색을 시간에 따라 변경하는 함수
+  const updateBackgroundColor = () => {
+    const hour = currentTime.getHours();
+    const minute = currentTime.getMinutes();
+    let background;
+
+    if (hour >= 6 && hour < 17) {
+      // 낮 시간
+      background =
+        'linear-gradient(180deg, #38ABEC 25.08%, #8ECEF7 68.23%, #CAE7FF 100%)';
+    } else if (hour >= 17 && hour < 18) {
+      // 해지는 시간
+      background = 'linear-gradient(180deg, #FC9245 25.08%, #FFF597 100%)';
+    } else if (hour >= 18 || hour < 6) {
+      // 밤 시간
+      background = 'linear-gradient(180deg, #0D2847 35.42%, #2C5B83 100%)';
+    }
+
+    setBackgroundColor(background);
+  };
+
+  // 해와 달의 위치를 계산하는 함수
+  const calculatePosition = (isSun) => {
+    const hour = currentTime.getHours();
+    const minute = currentTime.getMinutes();
+    let totalMinutes;
+    let progress;
+
+    if (isSun) {
+      // 해 : 오전 6시부터 오후 6시까지
+      totalMinutes = hour >= 6 && hour < 18 ? (hour - 6) * 60 + minute : 0;
+      progress = totalMinutes / (12 * 60);
+    } else {
+      // 달 : 오후 6시부터 오전 6시까지
+      totalMinutes =
+        hour >= 18 || hour < 6 ? ((hour + 6) % 24) * 60 + minute : 0;
+      progress = totalMinutes / (12 * 60);
+    }
+
+    // 화면 범위 내에서 움직이도록 조정
+    const x = 50 + (progress - 0.5) * 100; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
+    const y = 60 - Math.abs(Math.sin(progress * Math.PI)) * 50; // 중앙(50%)을 기준으로 위아래로 50% 움직임
+
+    return { left: `${x}%`, top: `${y}%` };
+  };
+
+  // 해와 달의 위치 상태
+  const [sunPosition, setSunPosition] = useState(calculatePosition());
+  const [moonPosition, setMoonPosition] = useState(calculatePosition());
+
+  // 마운트 시 실행됨
+  useEffect(() => {
+    // SSE 시간을 받아오는 함수
+    const fetchTime = () => {
+      const eventSource = new EventSource(
+        'http://localhost:8000/api/v1/sse/time',
+      );
+
+      eventSource.onmessage = (e) => {
+        const serverTime = JSON.parse(e.data);
+        console.log(serverTime.unixTime); // 배포 시 삭제
+        setCurrentTime(new Date(serverTime.unixTime * 1000));
+      };
+
+      eventSource.onerror = (e) => {
+        eventSource.close();
+
+        if (e.error) {
+          // 에러 발생 시 할 일
+        }
+
+        if (e.target.readyState === EventSource.CLOSED) {
+          // 종료 시 할 일
+        }
+      };
+    };
+
+    fetchTime();
+
+    updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
+
+    const timer = setInterval(() => {
+      const newTime = new Date();
+      setCurrentTime(newTime);
+    }, 60000); // 1분마다 시간 업데이트
+
+    return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+  }, []);
+
+  // 1초마다 실행됨
+  useEffect(() => {
+    updateBackgroundColor(); // currentTime 상태가 변경될 때마다 배경색 업데이트
+    setSunPosition(calculatePosition(true)); // 해 위치 업데이트
+    setMoonPosition(calculatePosition(false)); // 달 위치 업데이트
+  }, [currentTime]);
+
   const handleOpenMessage = () => {
     setOpenMessage(!openMessage);
   };
@@ -74,9 +179,75 @@ function MainPage() {
     setOpenAuthenticationModal(!openAuthenticationModal);
   };
 
+  // 시간을 12시간제로 변환하고 AM/PM 표시를 추가하는 함수 -> 배포 시 삭제
+  // const formatTime = (date) => {
+  //   let hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  //   hours %= 12;
+  //   hours = hours || 12; // 0시는 12로 표시
+  //   const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+
+  //   return `${hours}:${minutesStr} ${ampm}`;
+  // };
+
+  // 시간 증가/감소 테스트 함수 -> 배포 시 삭제
+  // const updateCurrentTime = (minutesChange) => {
+  //   const newTime = new Date(currentTime.getTime()); // 현재 시간 복사
+  //   newTime.setMinutes(currentTime.getMinutes() + minutesChange);
+
+  //   if (newTime.getMinutes() >= 60) {
+  //     newTime.setHours(newTime.getHours() + 1);
+  //     newTime.setMinutes(newTime.getMinutes() - 60);
+  //   } else if (newTime.getMinutes() < 0) {
+  //     newTime.setHours(newTime.getHours() - 1);
+  //     newTime.setMinutes(newTime.getMinutes() + 60);
+  //   }
+
+  //   setCurrentTime(newTime); // 상태 업데이트
+  //   updateBackgroundColor(); // 배경색 업데이트
+  // };
+
   return (
     <>
-      <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
+      <div
+        style={{
+          backgroundImage: backgroundColor,
+          height: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+        }}
+      >
+        {/* 해 이미지 */}
+        {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
+          <img
+            src={sunSample}
+            style={{
+              position: 'absolute',
+              left: sunPosition.left,
+              top: sunPosition.top,
+              width: '200px',
+              transform: 'translate(-50%, -50%)',
+            }}
+            alt="Sun"
+          />
+        )}
+        {/* 달 이미지 */}
+        {(currentTime.getHours() >= 18 || currentTime.getHours() < 6) && (
+          <img
+            src={moonSample}
+            style={{
+              position: 'absolute',
+              left: moonPosition.left,
+              top: moonPosition.top,
+              width: '180px',
+              transform: 'translate(-50%, -50%)',
+            }}
+            alt="Moon"
+          />
+        )}
+
         {!hasToken && (
           <div className="flex items-center justify-center p-5">
             <p className="mr-3 text-white">
@@ -97,7 +268,25 @@ function MainPage() {
             <p className="p-5 text-white">{AuthRole}</p>
           </div>
         )}
-
+        
+        {/* 테스트용 시간 조절 버튼 */}
+        {/* <div>
+          <button
+            type="button"
+            className="bg-blue-500 text-yellow-500"
+            onClick={() => updateCurrentTime(-10)} // 30분 감소
+          >
+            -10분
+          </button>
+          <button
+            type="button"
+            className="bg-blue-500 text-yellow-500"
+            onClick={() => updateCurrentTime(10)} // 30분 증가
+          >
+            +10분
+          </button>
+          <span className="text-yellow-500">{formatTime(currentTime)}</span>
+        </div> */}
         {hasToken &&
           messages.map((msg, index) => (
             <div
@@ -134,6 +323,8 @@ function MainPage() {
           closeModal={() => setShowMessageModal(false)}
         />
       )}
+
+      <ClockTest />
     </>
   );
 }

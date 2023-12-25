@@ -8,7 +8,7 @@ export default {
         bottomColor: '#2C5B83',
       },
       backgroundImage: {
-        'message-image': "url('./src/assets/images/messageModal.png')",
+        'message-image': "url('./public/messageModal.png')",
       },
       fontFamily: {
         PartialSans: ['PartialSansKR-Regular'],

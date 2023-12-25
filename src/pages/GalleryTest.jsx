@@ -38,19 +38,19 @@ function GalleryTest() {
   const handleImageClick = (slider) => {
     setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
     window.scrollTo(0, 0);
-    setIsModalOpen(!isModalOpen);
+    // setIsModalOpen(!isModalOpen);
   };
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isModalOpen]);
+  // useEffect(() => {
+  //   if (isModalOpen) {
+  //     document.body.style.overflow = 'hidden';
+  //   } else {
+  //     document.body.style.overflow = 'unset';
+  //   }
+  // }, [isModalOpen]);
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
+    <div className="bg-[rgba(255, 255, 255, 0.6)]">
       <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-32">
         {galleryData.map((gallery, index) => (
           <div key={index} className="flex h-[16rem]">

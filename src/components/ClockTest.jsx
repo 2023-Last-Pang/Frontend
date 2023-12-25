@@ -13,6 +13,7 @@ function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   // const navigate = useNavigate();
 
   // 숫자가 한자리 수일때 앞에 0을 붙여줌
@@ -21,8 +22,8 @@ function ClockTest() {
   };
 
   const calculateTimeDifference = () => {
-    const now = new Date();
-    const newYear = new Date('December 20, 2023 17:00:10');
+    const now = currentTime;
+    const newYear = new Date('January 1, 2024 00:00:00');
     const diff = newYear - now;
 
     // D-DAY 시간
@@ -63,22 +64,50 @@ function ClockTest() {
     countdown.resume();
   }
 
-  const interval = setInterval(calculateTimeDifference, 1000);
-
   useEffect(() => {
-    return () => clearInterval(interval);
+    // SSE 시간을 받아오는 함수
+    const fetchTime = () => {
+      const eventSource = new EventSource(
+        'http://localhost:8000/api/v1/sse/time',
+      );
+
+      eventSource.onmessage = (e) => {
+        const serverTime = JSON.parse(e.data);
+        setCurrentTime(new Date(serverTime.unixTime * 1000));
+      };
+
+      eventSource.onerror = (e) => {
+        eventSource.close();
+
+        if (e.error) {
+          // 에러 발생 시 할 일
+        }
+
+        if (e.target.readyState === EventSource.CLOSED) {
+          // 종료 시 할 일
+        }
+      };
+    };
+
+    fetchTime();
   }, []);
 
+  useEffect(() => {
+    if (currentTime) {
+      calculateTimeDifference();
+    }
+  }, [currentTime]);
+
   return (
-    <div className="flex h-screen w-screen">
+    <>
       {/* 카운트다운 */}
       {startCountDown != true && (
-        <motion.span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text font-Taebaek text-8xl tracking-[9px] text-transparent">
+        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
           {timeDifference}
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{
@@ -94,8 +123,7 @@ function ClockTest() {
           </motion.span>
         </div>
       )}
-      {complete && <Confetti className="h-full w-full" />}
-    </div>
+    </>
   );
 }
 

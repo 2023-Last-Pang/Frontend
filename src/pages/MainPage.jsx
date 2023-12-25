@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -10,6 +13,7 @@ import sunSample from '../assets/img/sun.svg';
 import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
+import GalleryTest from './GalleryTest';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -52,6 +56,20 @@ function MainPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const toggleScroll = (isModalOpen) => {
+      document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
+    };
+
+    // 모달 상태 변경 감지
+    toggleScroll(openAuthenticationModal || showMessageModal || openMessage);
+
+    // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [openAuthenticationModal, showMessageModal, openMessage])
+  
   // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -211,14 +229,7 @@ function MainPage() {
 
   return (
     <>
-      <div
-        style={{
-          backgroundImage: backgroundColor,
-          height: '100vh',
-          width: '100%',
-          overflow: 'hidden',
-        }}
-      >
+      <div className="first-page bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -299,7 +310,7 @@ function MainPage() {
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             />
-          ))}
+        ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
         {openMessage && hasToken && (
@@ -310,10 +321,13 @@ function MainPage() {
         )}
       </div>
 
+      <div className='fixed left-0 w-full h-screen overflow-hidden top-50 second-page'>
+        <GalleryTest/>
+      </div>
+
       {openAuthenticationModal && (
         <AuthenticationModal
           handleOpenAuthentication={handleOpenAuthentication}
-          // setRole={setRole}
         />
       )}
 

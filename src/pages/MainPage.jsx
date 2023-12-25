@@ -8,7 +8,6 @@ import MessageModal from '../components/Message/MessageModal';
 import sunSample from '../assets/img/sun.svg';
 import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
-import axios from 'axios';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -18,7 +17,7 @@ function MainPage() {
   const [showMessageModal, setShowMessageModal] = useState(false); // 메시지 모달 상태 추가
   // const [role, setRole] = useState("");
 
-  // 테스트용 시간
+  // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // 배경색 상태
@@ -35,6 +34,7 @@ function MainPage() {
       background =
         'linear-gradient(180deg, #38ABEC 25.08%, #8ECEF7 68.23%, #CAE7FF 100%)';
     } else if (hour >= 17 && hour < 18) {
+      // 해지는 시간
       background = 'linear-gradient(180deg, #FC9245 25.08%, #FFF597 100%)';
     } else if (hour >= 18 || hour < 6) {
       // 밤 시간
@@ -42,35 +42,6 @@ function MainPage() {
     }
 
     setBackgroundColor(background);
-  };
-
-  const updateCurrentTime = (minutesChange) => {
-    const newTime = new Date(currentTime.getTime()); // 현재 시간 복사
-    newTime.setMinutes(currentTime.getMinutes() + minutesChange);
-
-    if (newTime.getMinutes() >= 60) {
-      newTime.setHours(newTime.getHours() + 1);
-      newTime.setMinutes(newTime.getMinutes() - 60);
-    } else if (newTime.getMinutes() < 0) {
-      newTime.setHours(newTime.getHours() - 1);
-      newTime.setMinutes(newTime.getMinutes() + 60);
-    }
-
-    setCurrentTime(newTime); // 상태 업데이트
-    updateBackgroundColor(); // 배경색 업데이트
-  };
-
-  // 시간을 12시간제로 변환하고 AM/PM 표시를 추가하는 함수 -> 배포 시 삭제
-  const formatTime = (date) => {
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    hours %= 12;
-    hours = hours || 12; // 0시는 12로 표시
-    const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
-
-    return `${hours}:${minutesStr} ${ampm}`;
   };
 
   // 해와 달의 위치를 계산하는 함수
@@ -81,14 +52,14 @@ function MainPage() {
     let progress;
 
     if (isSun) {
-      // 해: 오전 6시부터 오후 6시까지
+      // 해 : 오전 6시부터 오후 6시까지
       totalMinutes = hour >= 6 && hour < 18 ? (hour - 6) * 60 + minute : 0;
-      progress = totalMinutes / (12 * 60); // 0(시작)에서 1(끝)까지의 진행도
+      progress = totalMinutes / (12 * 60);
     } else {
-      // 달: 오후 6시부터 오전 6시까지
+      // 달 : 오후 6시부터 오전 6시까지
       totalMinutes =
         hour >= 18 || hour < 6 ? ((hour + 6) % 24) * 60 + minute : 0;
-      progress = totalMinutes / (12 * 60); // 0(시작3에서 1(끝)까지의 진행도
+      progress = totalMinutes / (12 * 60);
     }
 
     // 화면 범위 내에서 움직이도록 조정
@@ -102,6 +73,7 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
+  // 마운트 시 실행됨
   useEffect(() => {
     // SSE 시간을 받아오는 함수
     const fetchTime = () => {
@@ -111,7 +83,7 @@ function MainPage() {
 
       eventSource.onmessage = (e) => {
         const serverTime = JSON.parse(e.data);
-        console.log(serverTime.unixTime);
+        console.log(serverTime.unixTime); // 배포 시 삭제
         setCurrentTime(new Date(serverTime.unixTime * 1000));
       };
 
@@ -140,27 +112,12 @@ function MainPage() {
     return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
   }, []);
 
+  // 1초마다 실행됨
   useEffect(() => {
     updateBackgroundColor(); // currentTime 상태가 변경될 때마다 배경색 업데이트
-    setSunPosition(calculatePosition(true)); // 해의 위치 업데이트
-    setMoonPosition(calculatePosition(false)); // 달의 위치 업데이트
+    setSunPosition(calculatePosition(true)); // 해 위치 업데이트
+    setMoonPosition(calculatePosition(false)); // 달 위치 업데이트
   }, [currentTime]);
-
-  // useEffect(() => {
-  //   updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
-
-  //   const timer = setInterval(() => {
-  //     const newTime = new Date();
-  //     setCurrentTime(newTime);
-  //     updateBackgroundColor();
-  //   }, 60000); // 1분마다 업데이트
-
-  //   // 해와 달의 위치 업데이트 로직
-  //   setSunPosition(calculatePosition(true));
-  //   setMoonPosition(calculatePosition(false));
-
-  //   return () => clearInterval(timer); // 정리
-  // }, [currentTime]);
 
   const handleOpenMessage = () => {
     setOpenMessage(!openMessage);
@@ -184,6 +141,36 @@ function MainPage() {
   const handleOpenAuthentication = () => {
     setOpenAuthenticationModal(!openAuthenticationModal);
   };
+
+  // 시간을 12시간제로 변환하고 AM/PM 표시를 추가하는 함수 -> 배포 시 삭제
+  // const formatTime = (date) => {
+  //   let hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  //   hours %= 12;
+  //   hours = hours || 12; // 0시는 12로 표시
+  //   const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+
+  //   return `${hours}:${minutesStr} ${ampm}`;
+  // };
+
+  // 시간 증가/감소 테스트 함수 -> 배포 시 삭제
+  // const updateCurrentTime = (minutesChange) => {
+  //   const newTime = new Date(currentTime.getTime()); // 현재 시간 복사
+  //   newTime.setMinutes(currentTime.getMinutes() + minutesChange);
+
+  //   if (newTime.getMinutes() >= 60) {
+  //     newTime.setHours(newTime.getHours() + 1);
+  //     newTime.setMinutes(newTime.getMinutes() - 60);
+  //   } else if (newTime.getMinutes() < 0) {
+  //     newTime.setHours(newTime.getHours() - 1);
+  //     newTime.setMinutes(newTime.getMinutes() + 60);
+  //   }
+
+  //   setCurrentTime(newTime); // 상태 업데이트
+  //   updateBackgroundColor(); // 배경색 업데이트
+  // };
 
   return (
     <>
@@ -241,7 +228,7 @@ function MainPage() {
           </div> */}
         </div>
         {/* 테스트용 시간 조절 버튼 */}
-        <div>
+        {/* <div>
           <button
             type="button"
             className="bg-blue-500 text-yellow-500"
@@ -257,7 +244,7 @@ function MainPage() {
             +10분
           </button>
           <span className="text-yellow-500">{formatTime(currentTime)}</span>
-        </div>
+        </div> */}
         {messages.map((msg, index) => (
           <div
             key={msg.id}

@@ -23,7 +23,7 @@ function ClockTest() {
 
   const calculateTimeDifference = () => {
     const now = currentTime;
-    const newYear = new Date('December 20, 2023 17:00:10');
+    const newYear = new Date('January 1, 2024 00:00:00');
     const diff = newYear - now;
 
     // D-DAY 시간
@@ -102,7 +102,7 @@ function ClockTest() {
     <>
       {/* 카운트다운 */}
       {startCountDown != true && (
-        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-8xl tracking-[9px] text-transparent">
+        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
           {timeDifference}
         </motion.span>
       )}
@@ -123,7 +123,6 @@ function ClockTest() {
           </motion.span>
         </div>
       )}
-      {complete && <Confetti className="h-full w-full" />}
     </>
   );
 }

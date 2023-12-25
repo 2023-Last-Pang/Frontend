@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 이미지 import
 import gallery1 from '../../public/img/April/gallery1.jpg';
@@ -33,11 +33,21 @@ const galleryData = [
 
 function GalleryTest() {
   const [activeSlider, setActiveSlider] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleImageClick = (slider) => {
     setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
     window.scrollTo(0, 0);
+    setIsModalOpen(!isModalOpen);
   };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isModalOpen]);
 
   return (
     <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
@@ -59,13 +69,13 @@ function GalleryTest() {
                   alt={`img${index}`}
                   className="object-cover object-center w-full h-full transition duration-300 ease-in-out transform hover:scale-105"
                 />
-                <span className="absolute z-10 p-2 text-3xl font-bold text-white transform -translate-y-1/2 bg-gray-500 bg-opacity-50 rounded top-1/2 drop-shadow-md">
+                <span className="absolute z-20 p-2 text-3xl font-bold text-white transform -translate-y-1/2 bg-gray-500 bg-opacity-50 rounded top-1/2 drop-shadow-md">
                   {textData[Math.floor(index / 2)][index % 2]}
                 </span>
               </div>
             </div>
             {activeSlider === gallery.slider && gallery.slider && (
-              <div className="relative w-full max-w-3xl p-4">
+              <div className="relative z-10 w-full max-w-3xl p-4">
                 {gallery.slider &&
                   React.createElement(gallery.slider, {
                     onImageClick: handleImageClick,

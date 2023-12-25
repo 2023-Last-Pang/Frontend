@@ -28,11 +28,6 @@ body {
   height: 100%;
 }
 
-/* .swiper-wrapper {
-  backdrop-filter: blur(10px);
-  background-color: transparent;
-} */
-
 .swiper-slide {
   text-align: center;
   font-size: 18px;
@@ -77,14 +72,14 @@ body {
 
 .swiper-button-prev:after,
 .swiper-button-next:after {
-  font-size: 1.5rem; /* 아이콘 크기를 1.1rem에서 1.5rem으로 조정 */
-  font-weight: bold; /* 아이콘의 두께를 더 굵게 조정 */
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
-  opacity: 1; /* 호버 시 불투명도를 100%로 설정 */
-  background: rgba(200, 199, 199, 1); /* 호버 시 배경색을 불투명하게 설정 */
+  opacity: 1;
+  background: rgba(200, 199, 199, 1);
 }
 
 .swiper-pagination-bullet {

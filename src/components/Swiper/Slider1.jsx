@@ -19,10 +19,9 @@ function Slider1({ onClose }) {
   const [activeImageIndex, setActiveImageIndex] = useState(null);
 
   const handleImageClick = () => {
-    // 모달을 닫습니다.
     setModalVisible(false);
     if (onClose) {
-      onClose(); // GalleryTest 컴포넌트의 handleSliderClose 함수를 호출
+      onClose();
     }
   };
 
@@ -65,8 +64,8 @@ function Slider1({ onClose }) {
       </Swiper>
       {isModalVisible && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div className="relative w-full items-center">
+        <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
+          <div className="relative w-full items-center overflow-y-auto">
             <img
               src={images[activeImageIndex]}
               loading="lazy"

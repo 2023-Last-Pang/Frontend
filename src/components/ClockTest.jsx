@@ -13,6 +13,7 @@ function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   // const navigate = useNavigate();
 
   // 숫자가 한자리 수일때 앞에 0을 붙여줌
@@ -21,7 +22,7 @@ function ClockTest() {
   };
 
   const calculateTimeDifference = () => {
-    const now = new Date();
+    const now = currentTime;
     const newYear = new Date('December 20, 2023 17:00:10');
     const diff = newYear - now;
 
@@ -63,11 +64,39 @@ function ClockTest() {
     countdown.resume();
   }
 
-  const interval = setInterval(calculateTimeDifference, 1000);
+  useEffect(() => {
+    // SSE 시간을 받아오는 함수
+    const fetchTime = () => {
+      const eventSource = new EventSource(
+        'http://localhost:8000/api/v1/sse/time',
+      );
+
+      eventSource.onmessage = (e) => {
+        const serverTime = JSON.parse(e.data);
+        setCurrentTime(new Date(serverTime.unixTime * 1000));
+      };
+
+      eventSource.onerror = (e) => {
+        eventSource.close();
+
+        if (e.error) {
+          // 에러 발생 시 할 일
+        }
+
+        if (e.target.readyState === EventSource.CLOSED) {
+          // 종료 시 할 일
+        }
+      };
+    };
+
+    fetchTime();
+  }, []);
 
   useEffect(() => {
-    return () => clearInterval(interval);
-  }, []);
+    if (currentTime) {
+      calculateTimeDifference();
+    }
+  }, [currentTime]);
 
   return (
     <>

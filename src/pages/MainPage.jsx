@@ -8,6 +8,7 @@ import MessageModal from '../components/Message/MessageModal';
 import sunSample from '../assets/img/sun.svg';
 import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
+import axios from 'axios';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -29,10 +30,12 @@ function MainPage() {
     const minute = currentTime.getMinutes();
     let background;
 
-    if (hour >= 6 && hour < 18) {
+    if (hour >= 6 && hour < 17) {
       // 낮 시간
       background =
         'linear-gradient(180deg, #38ABEC 25.08%, #8ECEF7 68.23%, #CAE7FF 100%)';
+    } else if (hour >= 17 && hour < 18) {
+      background = 'linear-gradient(180deg, #FC9245 25.08%, #FFF597 100%)';
     } else if (hour >= 18 || hour < 6) {
       // 밤 시간
       background = 'linear-gradient(180deg, #0D2847 35.42%, #2C5B83 100%)';
@@ -100,6 +103,33 @@ function MainPage() {
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
   useEffect(() => {
+    // SSE 시간을 받아오는 함수
+    const fetchTime = () => {
+      const eventSource = new EventSource(
+        'http://localhost:8000/api/v1/sse/time',
+      );
+
+      eventSource.onmessage = (e) => {
+        const serverTime = JSON.parse(e.data);
+        console.log(serverTime.unixTime);
+        setCurrentTime(new Date(serverTime.unixTime * 1000));
+      };
+
+      eventSource.onerror = (e) => {
+        eventSource.close();
+
+        if (e.error) {
+          // 에러 발생 시 할 일
+        }
+
+        if (e.target.readyState === EventSource.CLOSED) {
+          // 종료 시 할 일
+        }
+      };
+    };
+
+    fetchTime();
+
     updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
 
     const timer = setInterval(() => {

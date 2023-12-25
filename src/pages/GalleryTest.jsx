@@ -36,29 +36,30 @@ function GalleryTest() {
 
   const handleImageClick = (slider) => {
     setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
+    window.scrollTo(0, 0);
   };
 
   return (
     <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
-      <div className="mx-6 mt-32 grid grid-cols-3 grid-rows-2 gap-6">
+      <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-32">
         {galleryData.map((gallery, index) => (
           <div key={index} className="flex h-[16rem]">
             <div
               role="button"
               tabIndex={0}
-              className="relative h-full w-full cursor-pointer overflow-hidden"
+              className="relative w-full h-full overflow-hidden cursor-pointer"
               onClick={() => handleImageClick(gallery.slider)}
               onKeyDown={(e) =>
                 e.key === 'Enter' && handleImageClick(gallery.slider)
               }>
-              <div className="inset-0 flex items-center justify-center bg-white opacity-70 transition-shadow duration-300 hover:shadow-lg">
+              <div className="inset-0 flex items-center justify-center transition-shadow duration-300 bg-white opacity-70 hover:shadow-lg">
                 <img
                   src={gallery.image}
                   loading="lazy"
                   alt={`img${index}`}
-                  className="h-full w-full transform object-cover object-center transition duration-300 ease-in-out hover:scale-105"
+                  className="object-cover object-center w-full h-full transition duration-300 ease-in-out transform hover:scale-105"
                 />
-                <span className="absolute top-1/2 z-10 -translate-y-1/2 transform rounded bg-gray-500 bg-opacity-50 p-2 text-3xl font-bold text-white drop-shadow-md">
+                <span className="absolute z-10 p-2 text-3xl font-bold text-white transform -translate-y-1/2 bg-gray-500 bg-opacity-50 rounded top-1/2 drop-shadow-md">
                   {textData[Math.floor(index / 2)][index % 2]}
                 </span>
               </div>

@@ -26,5 +26,6 @@ module.exports = {
     'import/no-unresolved': 'off',
     'react/prop-types': 'off',
     'import/extensions': 'off',
+    'global-require': 'off',
   },
 };

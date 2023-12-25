@@ -54,69 +54,103 @@
   object-fit: cover;
 }
 
-/* 기본 스타일 (가장 작은 화면) */
 .special-size img {
-  height: 180px; /* 예시: 작은 화면에서의 높이 */
+  height: 180px;
   object-fit: cover;
 }
 
 @media (min-width: 400px) {
   .special-size img {
-    height: 213px; /* 예시: 중간 화면에서의 높이 */
+    height: 213px;
   }
 }
 
 @media (min-width: 500px) {
   .special-size img {
-    height: 275px; /* 예시: 중간 화면에서의 높이 */
+    height: 275px;
   }
 }
 
-/* 중간 크기 화면 */
 @media (min-width: 768px) {
   .special-size img {
-    height: 200px; /* 예시: 중간 화면에서의 높이 */
+    height: 200px;
   }
 }
 
-/* 중간과 큰 크기 사이 화면 */
 @media (min-width: 800px) {
   .special-size img {
-    height: 213px; /* 예시: 중간 화면에서의 높이 */
+    height: 213px;
   }
 }
 
-/* 중간과 큰 크기 사이 화면 */
 @media (min-width: 900px) {
   .special-size img {
-    height: 220px; /* 예시: 중간 화면에서의 높이 */
+    height: 220px;
   }
 }
 
-/* 중간과 큰 크기 사이 화면 */
 @media (min-width: 1000px) {
   .special-size img {
-    height: 176px; /* 예시: 중간 화면에서의 높이 */
+    height: 250px;
   }
 }
 
-/* 중간과 큰 크기 사이 화면 */
+@media (min-width: 1020px) {
+  .special-size img {
+    height: 175px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .special-size img {
+    height: 190px;
+  }
+}
+
 @media (min-width: 1200px) {
   .special-size img {
-    height: 222px; /* 예시: 중간 화면에서의 높이 */
+    height: 222px;
   }
 }
 
-/* 중간과 큰 크기 사이 화면 */
+@media (min-width: 1300px) {
+  .special-size img {
+    height: 222px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .special-size img {
+    height: 265px;
+  }
+}
+
 @media (min-width: 1500px) {
   .special-size img {
-    height: 263px; /* 예시: 중간 화면에서의 높이 */
+    height: 263px;
   }
 }
 
-/* 큰 화면 */
+@media (min-width: 1600px) {
+  .special-size img {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1700px) {
+  .special-size img {
+    height: 310px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .special-size img {
+    height: 315px;
+  }
+}
+
 @media (min-width: 1900px) {
   .special-size img {
-    height: 300px; /* 가장 큰 화면에서의 높이 */
+    height: 345px;
   }
 }

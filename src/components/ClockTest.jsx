@@ -65,37 +65,46 @@ function ClockTest() {
   }
 
   useEffect(() => {
-    // SSE 시간을 받아오는 함수
-    const fetchTime = () => {
-      const eventSource = new EventSource(
-        'http://localhost:8000/api/v1/sse/time',
-      );
+    // 매초 시간 업데이트
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
-      eventSource.onmessage = (e) => {
-        const serverTime = JSON.parse(e.data);
-        setCurrentTime(new Date(serverTime.unixTime * 1000));
-      };
+    // SSE 시간을 받아옴
+    const eventSource = new EventSource(
+      'http://localhost:8000/api/v1/sse/time',
+    );
 
-      eventSource.onerror = (e) => {
-        eventSource.close();
-
-        if (e.error) {
-          // 에러 발생 시 할 일
-        }
-
-        if (e.target.readyState === EventSource.CLOSED) {
-          // 종료 시 할 일
-        }
-      };
+    eventSource.onmessage = (e) => {
+      const serverTime = JSON.parse(e.data);
+      console.log(serverTime.unixTime); // 배포 시 삭제
+      setCurrentTime(new Date(serverTime.unixTime * 1000));
     };
 
-    fetchTime();
+    eventSource.onerror = (e) => {
+      eventSource.close();
+
+      if (e.error) {
+        // 에러 발생 시 할 일
+      }
+
+      if (e.target.readyState === EventSource.CLOSED) {
+        // 종료 시 할 일
+      }
+    };
+
+    // 정리
+    return () => {
+      clearInterval(intervalId);
+      eventSource.close();
+    };
   }, []);
 
   useEffect(() => {
     if (currentTime) {
       calculateTimeDifference();
     }
+    console.log(currentTime);
   }, [currentTime]);
 
   return (
@@ -117,8 +126,7 @@ function ClockTest() {
               scale: 1.2 + 3 / countdown.seconds,
             }}
             key={countdown.seconds}
-            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent"
-          >
+            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent">
             {countdown.seconds}
           </motion.span>
         </div>

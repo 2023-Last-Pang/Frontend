@@ -30,7 +30,7 @@ function MainPage() {
   const getMessageAPI = async () => {
     try {
       const response = await apiV1Instance.get('/messages');
-      const fetchedMessages = response.data.data.map(msg => ({
+      const fetchedMessages = response.data.data.map((msg) => ({
         ...msg,
         x: Math.random() * 100, // 랜덤 x 위치
         y: Math.random() * 50, // 랜덤 y 위치
@@ -46,7 +46,7 @@ function MainPage() {
     setHasToken(!!token);
     if (token) {
       getMessageAPI();
-      
+
       const role = localStorage.getItem('role');
       if (role === techeerRole) {
         setAuthRole('테커인');
@@ -68,8 +68,8 @@ function MainPage() {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openAuthenticationModal, showMessageModal, openMessage])
-  
+  }, [openAuthenticationModal, showMessageModal, openMessage]);
+
   // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -128,32 +128,32 @@ function MainPage() {
 
   // 마운트 시 실행됨
   useEffect(() => {
-    // SSE 시간을 받아오는 함수
-    const fetchTime = () => {
-      const eventSource = new EventSource(
-        'http://localhost:8000/api/v1/sse/time',
-      );
+    // 매초 시간 업데이트
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
-      eventSource.onmessage = (e) => {
-        const serverTime = JSON.parse(e.data);
-        console.log(serverTime.unixTime); // 배포 시 삭제
-        setCurrentTime(new Date(serverTime.unixTime * 1000));
-      };
+    // SSE 시간을 받아옴
+    const eventSource = new EventSource(
+      'http://localhost:8000/api/v1/sse/time',
+    );
 
-      eventSource.onerror = (e) => {
-        eventSource.close();
-
-        if (e.error) {
-          // 에러 발생 시 할 일
-        }
-
-        if (e.target.readyState === EventSource.CLOSED) {
-          // 종료 시 할 일
-        }
-      };
+    eventSource.onmessage = (e) => {
+      const serverTime = JSON.parse(e.data);
+      setCurrentTime(new Date(serverTime.unixTime * 1000));
     };
 
-    fetchTime();
+    eventSource.onerror = (e) => {
+      eventSource.close();
+
+      if (e.error) {
+        // 에러 발생 시 할 일
+      }
+
+      if (e.target.readyState === EventSource.CLOSED) {
+        // 종료 시 할 일
+      }
+    };
 
     updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
 
@@ -162,7 +162,11 @@ function MainPage() {
       setCurrentTime(newTime);
     }, 60000); // 1분마다 시간 업데이트
 
-    return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      clearInterval(timer);
+      clearInterval(intervalId);
+      eventSource.close();
+    }; // 컴포넌트 언마운트 시 타이머 정리
   }, []);
 
   // 1초마다 실행됨
@@ -229,7 +233,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
+      <div className="first-page bg-linear-gradient , [#193D60]) h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -267,8 +271,7 @@ function MainPage() {
             <button
               type="button"
               className="link-style"
-              onClick={() => handleOpenAuthentication()}
-            >
+              onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
           </div>
@@ -279,7 +282,7 @@ function MainPage() {
             <p className="p-5 text-white">{AuthRole}</p>
           </div>
         )}
-        
+
         {/* 테스트용 시간 조절 버튼 */}
         {/* <div>
           <button
@@ -302,7 +305,9 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
+              className={`absolute cursor-pointer text-white  ${
+                msg.isNew ? 'new-message' : 'star'
+              }`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
@@ -310,7 +315,7 @@ function MainPage() {
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             />
-        ))}
+          ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
         {openMessage && hasToken && (
@@ -321,8 +326,8 @@ function MainPage() {
         )}
       </div>
 
-      <div className='fixed left-0 w-full h-screen overflow-hidden top-50 second-page'>
-        <GalleryTest/>
+      <div className="top-50 second-page fixed left-0 h-screen w-full overflow-hidden">
+        <GalleryTest />
       </div>
 
       {openAuthenticationModal && (

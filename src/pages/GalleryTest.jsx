@@ -1,4 +1,3 @@
-// GalleryTest 컴포넌트
 import React, { useState } from 'react';
 
 // 이미지 import
@@ -34,49 +33,16 @@ const galleryData = [
 
 function GalleryTest() {
   const [activeSlider, setActiveSlider] = useState(null);
-  const [activeZIndex, setActiveZIndex] = useState(1000);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleBodyScroll = (shouldHide) => {
-    console.log(`handleBodyScroll: ${shouldHide}`);
-    if (shouldHide) {
-      console.log('Adding overflow-hidden to body');
-      document.body.classList.add('overflow-hidden');
-    } else {
-      console.log('Removing overflow-hidden from body');
-      document.body.classList.remove('overflow-hidden');
-    }
-  };
 
   const handleImageClick = (slider) => {
-    console.log('Opening modal...'); // 모달 열림 로그
-    handleBodyScroll(true); // 스크롤 비활성화
-    setIsModalVisible(true);
-    setActiveSlider(() => slider);
-  };
-
-  const handleSliderClose = () => {
-    console.log('Closing modal...');
-    setActiveSlider(null);
-
-    // 스테이트 업데이트 후 스크롤 재활성화를 지연시켜 호출
-    setTimeout(() => {
-      handleBodyScroll(false);
-    }, 0);
-
-    // 모달 닫힘을 스테이트에 반영
-    setIsModalVisible(false);
+    setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
   };
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)]">
-      <div
-        className={`m-16 grid grid-cols-2 grid-rows-3 gap-6 ${
-          isModalVisible ? 'blur-background' : ''
-        }`}>
+    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
+      <div className="mx-6 mt-32 grid grid-cols-3 grid-rows-2 gap-6">
         {galleryData.map((gallery, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className="flex h-[20rem] ">
+          <div key={index} className="flex h-[16rem]">
             <div
               role="button"
               tabIndex={0}
@@ -98,11 +64,11 @@ function GalleryTest() {
               </div>
             </div>
             {activeSlider === gallery.slider && gallery.slider && (
-              <div className="relative max-w-3xl p-4">
+              <div className="relative w-full max-w-3xl p-4">
                 {gallery.slider &&
                   React.createElement(gallery.slider, {
                     onImageClick: handleImageClick,
-                    onClose: handleSliderClose, // 여기에서 handleSliderClose를 전달합니다.
+                    onClose: () => handleImageClick(gallery.slider), // 슬라이더를 다시 클릭하면 닫히게 함
                     images: [gallery.image],
                   })}
               </div>

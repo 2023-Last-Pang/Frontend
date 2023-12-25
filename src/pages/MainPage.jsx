@@ -284,14 +284,14 @@ function MainPage() {
         {/* <div>
           <button
             type="button"
-            className="bg-blue-500 text-yellow-500"
+            className="text-yellow-500 bg-blue-500"
             onClick={() => updateCurrentTime(-10)} // 30분 감소
           >
             -10분
           </button>
           <button
             type="button"
-            className="bg-blue-500 text-yellow-500"
+            className="text-yellow-500 bg-blue-500"
             onClick={() => updateCurrentTime(10)} // 30분 증가
           >
             +10분

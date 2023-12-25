@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // 이미지 import
 import gallery1 from '../../public/img/April/gallery1.jpg';

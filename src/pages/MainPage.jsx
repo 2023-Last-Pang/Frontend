@@ -229,7 +229,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page scrollbar-hide bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
+      <div className="first-page overflow-hidden scrollbar-hide bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -321,7 +321,7 @@ function MainPage() {
         )}
       </div>
 
-      <div className='fixed left-0 w-full h-screen second-page'>
+      <div className='fixed left-0 w-full h-screen overflow-hidden second-page'>
         <GalleryTest/>
       </div>
 

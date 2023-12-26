@@ -10,9 +10,9 @@ export default function MessageModal({ handleOpenMessage, addMessage, message, c
   if (message) {
     return (
       <div className="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen text-center bg-black bg-opacity-20">
-        <div className="flex flex-col justify-center bg-cover h-80 w-80 bg-message-image">
+        <div loading="lazy" className="flex flex-col justify-center bg-cover h-80 w-80 bg-message-image">
           <div className="p-10 mt-5 ">
-            <div className='flex flex-col justify-between overflow-auto w-60 h-52 font-nanumPen'>
+            <div className='flex flex-col justify-between w-60 h-52 font-nanumPen'>
               <p className="text-lg message-content">{message.content}</p>
               <p className="text-right font-nanumPen">- {message.nickname} -</p>
             </div>

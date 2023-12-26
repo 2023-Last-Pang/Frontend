@@ -4,7 +4,7 @@ export default function MessageBtn({ handleOpenMessage }) {
     <div className="flex items-center justify-center h-screen">
       <button
         type="button"
-        className="relative flex h-10 w-48 items-center justify-center overflow-hidden rounded-full border border-white bg-gray-800 text-white shadow-2xl transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-white before:duration-500 before:ease-out hover:text-[#204569] hover:shadow-[#204569] hover:before:h-56 hover:before:w-56"
+        className="relative flex z-10 h-10 w-48 items-center justify-center overflow-hidden rounded-full border border-white bg-gray-800 text-white shadow-2xl transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-white before:duration-500 before:ease-out hover:text-[#204569] hover:shadow-[#204569] hover:before:h-56 hover:before:w-56"
         onClick={() => {
           handleOpenMessage();
         }}

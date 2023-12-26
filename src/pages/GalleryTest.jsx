@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 이미지 import
 import gallery1 from '../../public/img/April/gallery1.jpg';
@@ -50,8 +50,8 @@ function GalleryTest() {
   // }, [isModalOpen]);
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)]">
-      <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-32">
+    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
+      <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-36">
         {galleryData.map((gallery, index) => (
           <div key={index} className="flex h-[16rem]">
             <div
@@ -75,7 +75,7 @@ function GalleryTest() {
               </div>
             </div>
             {activeSlider === gallery.slider && gallery.slider && (
-              <div className="relative z-10 w-full max-w-3xl p-4">
+              <div className="fixed left-0 z-40 w-full max-w-3xl p-4">
                 {gallery.slider &&
                   React.createElement(gallery.slider, {
                     onImageClick: handleImageClick,

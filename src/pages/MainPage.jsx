@@ -321,6 +321,10 @@ function MainPage() {
         )}
       </div>
 
+      <a>
+        <span/> 
+      </a>
+
       <div className='fixed left-0 w-full h-screen overflow-hidden second-page'>
         <GalleryTest/>
       </div>

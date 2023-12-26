@@ -39,9 +39,7 @@ function Slider2({ onClose }) {
   };
 
   return (
-    <div
-      className="bg-[rgba(255, 255, 255, 0.6)] fixed inset-0 z-50 flex items-center justify-center"
-      style={{ zIndex: 1000 }}>
+    <div className="bg-[rgba(255, 255, 255, 0.6)] inset-0 z-50 h-screen w-screen -ml-4">
       <Swiper
         spaceBetween={0}
         centeredSlides
@@ -60,7 +58,7 @@ function Slider2({ onClose }) {
           // eslint-disable-next-line react/no-array-index-key
           <SwiperSlide key={index}>
             <div
-              className="h-4/6 w-3/4"
+              className="w-3/4 h-4/6"
               role="button"
               tabIndex={0}
               onClick={() => handleImageClick(index)}
@@ -68,7 +66,7 @@ function Slider2({ onClose }) {
               <img
                 src={image}
                 loading="lazy"
-                className="h-full w-full"
+                className="w-full h-full"
                 alt={`img${index}`}
               />
             </div>
@@ -78,11 +76,11 @@ function Slider2({ onClose }) {
       {isModalVisible && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div className="fixed inset-0 flex items-center justify-center">
-          <div className="relative w-full items-center">
+          <div className="relative items-center w-full">
             <img
               src={images[activeImageIndex]}
               loading="lazy"
-              className="h-full w-full object-cover"
+              className="object-cover w-full h-full"
               alt={`img${activeImageIndex}`}
             />
           </div>

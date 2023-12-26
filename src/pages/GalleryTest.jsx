@@ -33,24 +33,13 @@ const galleryData = [
 
 function GalleryTest() {
   const [activeSlider, setActiveSlider] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleImageClick = (slider) => {
     setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
-    window.scrollTo(0, 0);
-    // setIsModalOpen(!isModalOpen);
   };
 
-  // useEffect(() => {
-  //   if (isModalOpen) {
-  //     document.body.style.overflow = 'hidden';
-  //   } else {
-  //     document.body.style.overflow = 'unset';
-  //   }
-  // }, [isModalOpen]);
-
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">
+    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-x:hidden">
       <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-36">
         {galleryData.map((gallery, index) => (
           <div key={index} className="flex h-[16rem]">
@@ -75,7 +64,7 @@ function GalleryTest() {
               </div>
             </div>
             {activeSlider === gallery.slider && gallery.slider && (
-              <div className="fixed left-0 z-40 w-full max-w-3xl p-4">
+              <div className="fixed left-0 z-40 w-full -bottom-[50.7rem]">
                 {gallery.slider &&
                   React.createElement(gallery.slider, {
                     onImageClick: handleImageClick,

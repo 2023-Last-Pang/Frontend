@@ -229,7 +229,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
+      <div className="first-page scrollbar-hide bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img

@@ -33,7 +33,7 @@ function Slider6({ onClose }) {
   };
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)] fixed inset-0 z-50 flex items-center justify-center">
+    <div className="bg-[rgba(255, 255, 255, 0.6)] inset-0 z-50 h-screen w-screen -ml-4">
       <Swiper
         spaceBetween={0}
         centeredSlides
@@ -46,8 +46,7 @@ function Slider6({ onClose }) {
           clickable: true,
         }}
         navigation
-        modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper">
+        modules={[Autoplay, Pagination, Navigation]}>
         {images.map((image, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <SwiperSlide key={index}>
@@ -69,7 +68,7 @@ function Slider6({ onClose }) {
       </Swiper>
       {isModalVisible && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center ">
           <div className="relative items-center w-full">
             <img
               src={images[activeImageIndex]}

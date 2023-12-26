@@ -68,7 +68,7 @@ function ClockTest() {
     // SSE 시간을 받아오는 함수
     const fetchTime = () => {
       const eventSource = new EventSource(
-        'http://localhost:8000/api/v1/sse/time',
+        'https://lastpang-backend.fly.dev/api/v1/sse/time',
       );
 
       eventSource.onmessage = (e) => {

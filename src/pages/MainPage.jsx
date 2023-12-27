@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -38,6 +39,11 @@ function MainPage() {
       setMessages(fetchedMessages);
     } catch (error) {
       console.log(error);
+      if (error.response.data.statusCode === 401) {
+        alert("세션이 만료되었습니다. 다시 로그인해주세요!");
+        localStorage.clear();
+        window.location.reload();
+      }
     }
   };
 
@@ -260,13 +266,13 @@ function MainPage() {
         )}
 
         {!hasToken && (
-          <div className="flex items-center justify-center p-5">
+          <div className="z-30 flex items-center justify-center p-5">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style"
+              className="z-10 link-style"
               onClick={() => handleOpenAuthentication()}
             >
               인증 코드 입력

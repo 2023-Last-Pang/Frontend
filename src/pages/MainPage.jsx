@@ -235,7 +235,9 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page overflow-hidden scrollbar-hide bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t">
+      <div
+        style={{backgroundImage: backgroundColor}} 
+        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -308,7 +310,7 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
+              className={`absolute z-10 text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,

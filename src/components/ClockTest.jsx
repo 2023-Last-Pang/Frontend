@@ -78,14 +78,21 @@ function ClockTest() {
     eventSource.onmessage = (e) => {
       const serverTime = JSON.parse(e.data);
       console.log(serverTime.unixTime); // 배포 시 삭제
-      setCurrentTime(new Date(serverTime.unixTime * 1000));
+
+      const clientTime = new Date();
+      const timeGap = serverTime.unixTime - clientTime.getTime();
+      console.log(timeGap);
+
+      setCurrentTime(new Date(serverTime.unixTime));
 
       if (intervalTime) {
         clearInterval(intervalTime);
       }
 
       intervalTime = setInterval(() => {
-        setCurrentTime((prevTime) => new Date(prevTime.getTime() + 1000));
+        setCurrentTime(
+          (prevTime) => new Date(prevTime.getTime() + 1000 + timeGap),
+        );
       }, 1000);
     };
 
@@ -130,7 +137,7 @@ function ClockTest() {
     if (currentTime) {
       calculateTimeDifference();
     }
-    console.log(currentTime);
+    // console.log(currentTime.getTime());
   }, [currentTime]);
 
   return (

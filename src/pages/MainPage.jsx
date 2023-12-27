@@ -126,47 +126,66 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
-  // 마운트 시 실행됨
-  useEffect(() => {
-    // 매초 시간 업데이트
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  let intervalTime = null;
 
-    // SSE 시간을 받아옴
-    const eventSource = new EventSource(
-      'http://localhost:8000/api/v1/sse/time',
-    );
+  // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
+  const fetchServerTime = () => {
+    if (eventSource) {
+      eventSource.close(); // 기존 연결이 있다면 닫기
+    }
+
+    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
 
     eventSource.onmessage = (e) => {
       const serverTime = JSON.parse(e.data);
-      setCurrentTime(new Date(serverTime.unixTime * 1000));
+      console.log(serverTime.unixTime); // 배포 시 삭제
+      setCurrentTime(new Date(serverTime.unixTime));
+
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+
+      intervalTime = setInterval(() => {
+        setCurrentTime((prevTime) => new Date(prevTime.getTime() + 1000));
+      }, 1000);
     };
 
     eventSource.onerror = (e) => {
       eventSource.close();
+      // 에러 처리 로직
+    };
+  };
 
-      if (e.error) {
-        // 에러 발생 시 할 일
-      }
+  useEffect(() => {
+    fetchServerTime();
 
-      if (e.target.readyState === EventSource.CLOSED) {
-        // 종료 시 할 일
+    // 매초 시간 업데이트
+    intervalTime = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // 매 5초마다 서버 시간 업데이트
+    // const serverTimeUpdateInterval = setInterval(() => {
+    //   fetchServerTime();
+    // }, 5000);
+
+    // 탭 활성화 감지
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchServerTime();
       }
     };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
-
-    const timer = setInterval(() => {
-      const newTime = new Date();
-      setCurrentTime(newTime);
-    }, 60000); // 1분마다 시간 업데이트
-
+    // 정리
     return () => {
-      clearInterval(timer);
-      clearInterval(intervalId);
-      eventSource.close();
-    }; // 컴포넌트 언마운트 시 타이머 정리
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+      // clearInterval(serverTimeUpdateInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // 1초마다 실행됨

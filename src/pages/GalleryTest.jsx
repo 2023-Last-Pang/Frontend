@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable prettier/prettier */
+import React, { useState } from 'react';
 
 // 이미지 import
+import { CloseButton } from '@chakra-ui/react';
 import gallery1 from '../../public/img/April/gallery1.jpg';
 import gallery2 from '../../public/img/Ideaton/gallery2.jpg';
 import gallery3 from '../../public/img/HangoutDay/gallery3.jpg';
@@ -71,6 +75,9 @@ function GalleryTest() {
                     onClose: () => handleImageClick(gallery.slider), // 슬라이더를 다시 클릭하면 닫히게 함
                     images: [gallery.image],
                   })}
+                <div onClick={() => handleImageClick()} className="fixed z-10 flex items-center justify-center w-9 h-9 text-xl text-white bg-black rounded-full cursor-pointer right-[10.5rem] -bottom-[9.5rem]">
+                  <CloseButton />
+                </div>
               </div>
             )}
           </div>

@@ -18,12 +18,12 @@ function Slider1({ onClose }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
 
-  const handleImageClick = () => {
-    setModalVisible(false);
-    if (onClose) {
-      onClose();
-    }
-  };
+  // const handleImageClick = () => {
+  //   setModalVisible(false);
+  //   if (onClose) {
+  //     onClose();
+  //   }
+  // };
 
   return (
     <div className="bg-[rgba(255, 255, 255, 0.6)] inset-0 z-50 -ml-4 h-screen w-screen">
@@ -48,7 +48,7 @@ function Slider1({ onClose }) {
               className="w-3/4 h-4/6"
               role="button"
               tabIndex={0}
-              onClick={() => handleImageClick(index)}
+              // onClick={() => handleImageClick(index)}
               onKeyDown={(e) => e.key === 'Enter' && handleImageClick(index)}>
               <img
                 src={image}

@@ -34,7 +34,7 @@ function AndrewMessage() {
               height: '400px', // Tailwind CSS로 높이 조정
             }}>
             <img src={message} alt="Message" className="h-full w-full" />
-            <p className="font-nanumPen absolute left-1/2 top-[43%] z-30 -translate-x-1/2 -translate-y-1/2 transform text-sm text-black">
+            <p className="font-omyu_pretty absolute left-1/2 top-[43%] z-30 -translate-x-1/2 -translate-y-1/2 transform text-sm text-black">
               앤드류님의 메시지
             </p>
           </div>

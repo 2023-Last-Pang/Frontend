@@ -16,7 +16,7 @@ import sunSample from '../assets/img/sun.svg';
 import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
-import GalleryTest from './GalleryTest';
+import GalleryPage from './GalleryPage';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -336,10 +336,8 @@ function MainPage() {
       <a>
         <span/> 
       </a>
-
-      <div className='fixed left-0 w-full h-screen overflow-hidden second-page'>
-        <GalleryTest/>
-      </div>
+      
+      <GalleryPage/>
 
       {openAuthenticationModal && (
         <AuthenticationModal

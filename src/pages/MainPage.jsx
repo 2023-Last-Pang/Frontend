@@ -8,7 +8,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
-import { FaStar } from "react-icons/fa6";
+import { FaStar } from 'react-icons/fa6';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -33,7 +33,7 @@ function MainPage() {
   const getMessageAPI = async () => {
     try {
       const response = await apiV1Instance.get('/messages');
-      const fetchedMessages = response.data.data.map(msg => ({
+      const fetchedMessages = response.data.data.map((msg) => ({
         ...msg,
         x: Math.random() * 100, // 랜덤 x 위치
         y: Math.random() * 50, // 랜덤 y 위치
@@ -42,7 +42,7 @@ function MainPage() {
     } catch (error) {
       console.log(error);
       if (error.response.data.statusCode === 401) {
-        alert("세션이 만료되었습니다. 다시 로그인해주세요!");
+        alert('세션이 만료되었습니다. 다시 로그인해주세요!');
         localStorage.clear();
         window.location.reload();
       }
@@ -54,7 +54,7 @@ function MainPage() {
     setHasToken(!!token);
     if (token) {
       getMessageAPI();
-      
+
       const role = localStorage.getItem('role');
       if (role === techeerRole) {
         setAuthRole('테커인');
@@ -76,8 +76,8 @@ function MainPage() {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openAuthenticationModal, showMessageModal, openMessage])
-  
+  }, [openAuthenticationModal, showMessageModal, openMessage]);
+
   // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -87,7 +87,7 @@ function MainPage() {
   // 배경색을 시간에 따라 변경하는 함수
   const updateBackgroundColor = () => {
     const hour = currentTime.getHours();
-    const minute = currentTime.getMinutes();
+    // const minute = currentTime.getMinutes();
     let background;
 
     if (hour >= 6 && hour < 17) {
@@ -238,7 +238,7 @@ function MainPage() {
   return (
     <>
       <div
-        style={{backgroundImage: backgroundColor}} 
+        style={{ backgroundImage: backgroundColor }}
         className="w-full h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
@@ -277,8 +277,7 @@ function MainPage() {
             <button
               type="button"
               className="z-10 link-style"
-              onClick={() => handleOpenAuthentication()}
-            >
+              onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
           </div>
@@ -289,7 +288,7 @@ function MainPage() {
             <p className="p-5 text-white">{AuthRole}</p>
           </div>
         )}
-        
+
         {/* 테스트용 시간 조절 버튼 */}
         {/* <div>
           <button
@@ -312,7 +311,9 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute z-10 text-[#fffff0] cursor-pointer transition duration-300 ease-in-out transform hover:scale-150  ${msg.isNew ? 'new-message' : ''}`}
+              className={`absolute z-10 transform cursor-pointer text-[#fffff0] transition duration-300 ease-in-out hover:scale-150  ${
+                msg.isNew ? 'new-message' : ''
+              }`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
@@ -320,9 +321,14 @@ function MainPage() {
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             >
-              {!msg.isNew && (index % 2 === 0 ? <FaStar className="faStarAnimation"/> : <div className="star"/>)}
+              {!msg.isNew &&
+                (index % 2 === 0 ? (
+                  <FaStar className="faStarAnimation" />
+                ) : (
+                  <div className="star" />
+                ))}
             </div>
-        ))}
+          ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
         {openMessage && hasToken && (
@@ -334,10 +340,10 @@ function MainPage() {
       </div>
 
       <a>
-        <span/> 
+        <span />
       </a>
-      
-      <GalleryPage/>
+
+      <GalleryPage />
 
       {openAuthenticationModal && (
         <AuthenticationModal

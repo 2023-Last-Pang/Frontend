@@ -64,10 +64,12 @@ body {
 
 .swiper-button-prev {
   left: 2rem;
+  margin-left: 2rem;
 }
 
 .swiper-button-next {
   right: 2rem;
+  margin-right: 2rem;
 }
 
 .swiper-button-prev:after,

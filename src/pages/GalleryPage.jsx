@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable prettier/prettier */
+// prettier-ignore
 // 이미지 import
 import React, { useState } from 'react';
 
@@ -52,12 +53,55 @@ import December5 from '../../public/img/December/팀준인의겨울_5.jpg';
 import Slider from '../components/Swiper/Slider';
 
 const galleryData = [
-  { title: '4월 테커인의 낮', image: gallery1, images: [gallery1, April1, April2, April3, April4] },
-  { title: '테커 아이디어톤', image: gallery2, images: [gallery2, 아이디어톤_1, 아이디어톤_2, 아이디어톤_3, 아이디어톤_3, 아이디어톤_4, 아이디어톤_5, 아이디어톤_6, 아이디어톤_7, 아이디어톤_8]},
-  { title: '여름 부트캠프 행아웃데이', image: gallery3, images: [gallery3, HangoutDay1, HangoutDay2, HangoutDay3, HangoutDay4] },
-  { title: '8월 테커인의 낮', image: gallery4, images: [gallery4, August1, August2, August3, August4] },
-  { title: '10월 테커파티', image: gallery5, images: [gallery5, TecheerParty1, TecheerParty2, TecheerParty3, TecheerParty4, TecheerParty5, TecheerParty6] },
-  { title: '12월 팀준인의 겨울', image: gallery6, images: [gallery6, December1, December2, December3, December4, December5] },
+  {
+    title: '4월 테커인의 낮',
+    image: gallery1,
+    images: [gallery1, April1, April2, April3, April4],
+  },
+  {
+    title: '테커 아이디어톤',
+    image: gallery2,
+    images: [
+      gallery2,
+      아이디어톤_1,
+      아이디어톤_2,
+      아이디어톤_3,
+      아이디어톤_3,
+      아이디어톤_4,
+      아이디어톤_5,
+      아이디어톤_6,
+      아이디어톤_7,
+      아이디어톤_8,
+    ],
+  },
+  {
+    title: '여름 부트캠프 행아웃데이',
+    image: gallery3,
+    images: [gallery3, HangoutDay1, HangoutDay2, HangoutDay3, HangoutDay4],
+  },
+  {
+    title: '8월 테커인의 낮',
+    image: gallery4,
+    images: [gallery4, August1, August2, August3, August4],
+  },
+  {
+    title: '10월 테커파티',
+    image: gallery5,
+    images: [
+      gallery5,
+      TecheerParty1,
+      TecheerParty2,
+      TecheerParty3,
+      TecheerParty4,
+      TecheerParty5,
+      TecheerParty6,
+    ],
+  },
+  {
+    title: '12월 팀준인의 겨울',
+    image: gallery6,
+    images: [gallery6, December1, December2, December3, December4, December5],
+  },
 ];
 
 export default function GalleryPage() {
@@ -71,27 +115,39 @@ export default function GalleryPage() {
 
   return (
     <div className="flex items-center justify-center h-screen p-6">
-      <div className="grid grid-cols-1 grid-rows-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-3 grid-rows-2 gap-6">
         {galleryData.map((gallery) => (
-          <div 
-            className='relative transition duration-300 ease-in-out transform bg-white cursor-pointer opacity-70 hover:scale-105'
+          <div
+            className="relative transition duration-300 ease-in-out transform bg-white cursor-pointer opacity-70 hover:scale-105"
             onClick={() => handleImageClick(gallery.images)}>
             {/* 갤러리 대표 이미지 띄우기 */}
-            <img src={gallery.image} loading="lazy" className='object-cover w-full h-64 rounded-lg'/>
-            
+            <img
+              src={gallery.image}
+              loading="lazy"
+              className="object-cover w-full h-64 rounded-lg"
+            />
+
             {/* 갤러리 제목 띄우기 */}
-            <div className="absolute bottom-0 left-0 w-full p-5 bg-black bg-opacity-50 rounded" style={{background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)'}}>
-              <span className="text-lg font-bold text-white">{gallery.title}</span>
+            <div
+              className="absolute bottom-0 left-0 w-full p-5 bg-black bg-opacity-50 rounded"
+              style={{
+                background:
+                  'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+              }}>
+              <span className="text-lg font-bold text-white">
+                {gallery.title}
+              </span>
             </div>
           </div>
         ))}
       </div>
-      
-      {modalIsOpen && 
-        <div className='fixed z-10 flex items-center justify-center w-screen h-screen'>
-          <Slider setModalIsOpen={setModalIsOpen} images={activeSlider}/>
+
+      {/* 갤러리 모달 */}
+      {modalIsOpen && (
+        <div className="fixed z-10 flex items-center justify-center w-screen h-screen">
+          <Slider setModalIsOpen={setModalIsOpen} images={activeSlider} />
         </div>
-      }
+      )}
     </div>
   );
 }

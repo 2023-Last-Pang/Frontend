@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/self-closing-comp */
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import './style.css';
@@ -16,7 +16,12 @@ import 'swiper/css/navigation';
 
 export default function Slider({ setModalIsOpen, images }) {
   return (
-    <div onClick={() => setModalIsOpen(false)} className="h-screen overflow-x-hidden cursor-pointer w-s3reen">
+    <div
+      id="outside"
+      onClick={(e) => {
+        if (e.target.id === 'swiperSlide') setModalIsOpen(false);
+      }}
+      className="w-screen h-screen overflow-x-hidden cursor- pointer">
       <Swiper
         loop
         tabIndex={0}
@@ -32,11 +37,12 @@ export default function Slider({ setModalIsOpen, images }) {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
-      >
+        className="mySwiper">
         {images.map((image) => (
-          <SwiperSlide className='flex items-center justify-center w-full h-full'>
-            <div className='flex items-center justify-center w-3/4 h-4/6'>
+          <SwiperSlide
+            id="swiperSlide"
+            className="flex items-center justify-center w-full h-full">
+            <div className="flex items-center justify-center w-3/4 h-4/6">
               <img
                 src={image}
                 loading="lazy"

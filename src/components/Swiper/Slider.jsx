@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -21,7 +22,7 @@ export default function Slider({ setModalIsOpen, images }) {
       onClick={(e) => {
         if (e.target.id === 'swiperSlide') setModalIsOpen(false);
       }}
-      className="w-screen h-screen cursor-pointer">
+      className="w-screen h-screen overflow-x-hidden cursor-pointer">
       <Swiper
         loop
         tabIndex={0}
@@ -38,9 +39,10 @@ export default function Slider({ setModalIsOpen, images }) {
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper">
-        {images.map((image) => (
+        {images.map((image, index) => (
           <SwiperSlide
             id="swiperSlide"
+            key={index}
             className="flex items-center justify-center w-full h-full">
             <div className="flex items-center justify-center w-3/4 h-4/6">
               <img

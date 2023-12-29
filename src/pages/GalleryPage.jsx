@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/alt-text */
@@ -114,14 +115,25 @@ export default function GalleryPage() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-  }, []);
+    const toggleScroll = (isModalOpen) => {
+      document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
+    };
+
+    // 모달 상태 변경 감지
+    toggleScroll(modalIsOpen);
+
+    // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [modalIsOpen]);
 
   return (
     <div className="flex items-center justify-center h-screen p-6">
       <div className="grid grid-cols-3 grid-rows-2 gap-6">
-        {galleryData.map((gallery) => (
+        {galleryData.map((gallery, index) => (
           <div
+            key={index}
             className="relative transition duration-300 ease-in-out transform bg-white cursor-pointer opacity-70 hover:scale-105"
             onClick={() => handleImageClick(gallery.images)}>
             {/* 갤러리 대표 이미지 띄우기 */}

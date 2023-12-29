@@ -1,9 +1,13 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './styles.css';
+import { css } from '@emotion/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 import gallery1 from '../../../public/img/April/gallery1.jpg';
@@ -18,26 +22,36 @@ function Slider1({ onClose }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
 
-  // const handleImageClick = () => {
-  //   setModalVisible(false);
-  //   if (onClose) {
-  //     onClose();
-  //   }
-  // };
+  const handleImageClick = () => {
+    setModalVisible(false);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)] inset-0 z-50 -ml-4 h-screen w-screen">
+    <div onClick={() => onClose()} className="z-10 w-screen h-screen cursor-pointer">
       <Swiper
         spaceBetween={0}
         centeredSlides
         loop
         autoplay={{
-          delay: 2500,
+          delay: 3500,
           disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
-        pagination={{
-          clickable: true,
-        }}
+        css={css`
+          display: flex;
+          .swiper-pagination-bullet {
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 100%;
+            margin: 0;
+            line-height: 40px;
+            background-color: '#000';
+          }
+        `}
+        pagination={{ clickable: true }}
         navigation
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper">
@@ -47,13 +61,11 @@ function Slider1({ onClose }) {
             <div
               className="w-3/4 h-4/6"
               role="button"
-              tabIndex={0}
-              // onClick={() => handleImageClick(index)}
-              onKeyDown={(e) => e.key === 'Enter' && handleImageClick(index)}>
+              tabIndex={0}>
               <img
                 src={image}
                 loading="lazy"
-                className="w-full h-full"
+                className="w-full h-full rounded-lg"
                 alt={`img${index}`}
               />
             </div>
@@ -61,7 +73,6 @@ function Slider1({ onClose }) {
         ))}
       </Swiper>
       {isModalVisible && (
-        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
           <div className="relative items-center w-full overflow-y-auto">
             <img

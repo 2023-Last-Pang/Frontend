@@ -25,6 +25,7 @@
   background-color: white;
   animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out;
 }
+
 .new-message {
   width: 5px;
   height: 5px;

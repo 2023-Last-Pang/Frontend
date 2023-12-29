@@ -6,6 +6,14 @@ html {
   overflow: hidden;
 }
 
+.swiper-pagination-bullet {
+  @apply m-0 rounded-full w-7 h-7 bg-slate-500 bottom-96;
+}
+
+.swiper-pagination {
+  @apply bottom-[200px];
+}
+
 @font-face {
   font-family: 'Climate';
   src: url('./src/fonts/Climate.otf');
@@ -49,3 +57,4 @@ html {
   font-weight: 700;
   font-style: normal;
 }
+

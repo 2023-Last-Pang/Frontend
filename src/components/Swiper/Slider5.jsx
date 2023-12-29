@@ -43,6 +43,7 @@ function Slider5({ onClose }) {
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
         pagination={{
           clickable: true,
@@ -62,7 +63,7 @@ function Slider5({ onClose }) {
               <img
                 src={image}
                 loading="lazy"
-                className="w-full h-full"
+                className="w-full h-full rounded-lg"
                 alt={`img${index}`}
               />
             </div>

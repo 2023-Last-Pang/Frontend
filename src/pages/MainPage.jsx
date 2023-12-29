@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -7,6 +8,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
+import { FaStar } from "react-icons/fa6";
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -310,14 +312,16 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute z-10 text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
+              className={`absolute z-10 text-[#fffff0] cursor-pointer transition duration-300 ease-in-out transform hover:scale-150  ${msg.isNew ? 'new-message' : ''}`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
                 animationDelay: `0s, ${Math.floor(index % 3) * 5}s`,
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
-            />
+            >
+              {index % 2 === 0 ? <FaStar className="faStarAnimation"/> : <div className="star"/>}
+            </div>
         ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}

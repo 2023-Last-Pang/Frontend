@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 
 // 이미지 import
-import { CloseButton } from '@chakra-ui/react';
 import gallery1 from '../../public/img/April/gallery1.jpg';
 import gallery2 from '../../public/img/Ideaton/gallery2.jpg';
 import gallery3 from '../../public/img/HangoutDay/gallery3.jpg';
@@ -43,14 +42,14 @@ function GalleryTest() {
   };
 
   return (
-    <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-x:hidden">
+    <div className="bg-[rgba(255, 255, 255, 1)] overflow-x:hidden">
       <div className="grid grid-cols-3 grid-rows-2 gap-6 mx-6 mt-36">
         {galleryData.map((gallery, index) => (
           <div key={index} className="flex h-[16rem]">
             <div
               role="button"
               tabIndex={0}
-              className="relative w-full h-full overflow-hidden cursor-pointer"
+              className="relative w-full h-full overflow-hidden rounded-lg cursor-pointer"
               onClick={() => handleImageClick(gallery.slider)}
               onKeyDown={(e) =>
                 e.key === 'Enter' && handleImageClick(gallery.slider)
@@ -67,17 +66,15 @@ function GalleryTest() {
                 </span>
               </div>
             </div>
+            {/** modal 기존 스타일 종속 안받게 열어서 바깥부분은 다른색 주고 모달 밖 누르면 꺼지도록 하고 내부 이미지들은 기존과 동일하게 */}
             {activeSlider === gallery.slider && gallery.slider && (
-              <div className="fixed left-0 z-40 w-full -bottom-[50.7rem]">
+              <div className="fixed left-0 z-40 w-full h-full -bottom-[50.8rem]">
                 {gallery.slider &&
                   React.createElement(gallery.slider, {
                     onImageClick: handleImageClick,
                     onClose: () => handleImageClick(gallery.slider), // 슬라이더를 다시 클릭하면 닫히게 함
                     images: [gallery.image],
                   })}
-                <div onClick={() => handleImageClick()} className="fixed z-10 flex items-center justify-center w-9 h-9 text-xl text-white bg-black rounded-full cursor-pointer right-[10.5rem] -bottom-[9.5rem]">
-                  <CloseButton />
-                </div>
               </div>
             )}
           </div>

@@ -8,6 +8,12 @@ import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
 import apiV1Instance from '../apiV1Instance';
 
+import JoonMessage1 from '../components/JoonMessage1';
+import JoonMessage2 from '../components/JoonMessage2';
+import JoonMessage3 from '../components/JoonMessage3';
+
+import snowfield from '../../public/img/Message/snowfield.png';
+
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
@@ -23,7 +29,7 @@ function MainPage() {
   const getMessageAPI = async () => {
     try {
       const response = await apiV1Instance.get('/messages');
-      const fetchedMessages = response.data.data.map(msg => ({
+      const fetchedMessages = response.data.data.map((msg) => ({
         ...msg,
         x: Math.random() * 100, // 랜덤 x 위치
         y: Math.random() * 50, // 랜덤 y 위치
@@ -39,7 +45,7 @@ function MainPage() {
     setHasToken(!!token);
     if (token) {
       getMessageAPI();
-      
+
       const role = localStorage.getItem('role');
       if (role === techeerRole) {
         setAuthRole('테커인');
@@ -76,7 +82,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
+      <div className="bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full overflow-hidden bg-gradient-to-t">
         {!hasToken && (
           <div className="flex items-center justify-center p-5">
             <p className="mr-3 text-white">
@@ -85,8 +91,7 @@ function MainPage() {
             <button
               type="button"
               className="link-style"
-              onClick={() => handleOpenAuthentication()}
-            >
+              onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
           </div>
@@ -102,7 +107,9 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
+              className={`absolute cursor-pointer text-white  ${
+                msg.isNew ? 'new-message' : 'star'
+              }`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
@@ -119,6 +126,18 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+        <div className="">
+          <img
+            src={snowfield}
+            className="absolute bottom-0 w-full"
+            alt="Snowfield Background"
+          />
+          <div className="z-20 flex flex-row">
+            <JoonMessage1 />
+            <JoonMessage2 />
+            <JoonMessage3 />
+          </div>
+        </div>
       </div>
 
       {openAuthenticationModal && (

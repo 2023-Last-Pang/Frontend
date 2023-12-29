@@ -21,7 +21,7 @@ export default function Slider({ setModalIsOpen, images }) {
       onClick={(e) => {
         if (e.target.id === 'swiperSlide') setModalIsOpen(false);
       }}
-      className="w-screen h-screen overflow-x-hidden cursor- pointer">
+      className="w-screen h-screen cursor-pointer">
       <Swiper
         loop
         tabIndex={0}

@@ -8,7 +8,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
+import { SectionsContainer, Section } from 'react-fullpage';
 import { FaStar } from 'react-icons/fa6';
+import { MdLogout } from 'react-icons/md';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -65,18 +67,8 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    const toggleScroll = (isModalOpen) => {
-      document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
-    };
-
-    // 모달 상태 변경 감지
-    toggleScroll(openAuthenticationModal || showMessageModal || openMessage);
-
-    // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [openAuthenticationModal, showMessageModal, openMessage]);
+    document.body.style.overflow = 'hidden';
+  }, []);
 
   // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -235,62 +227,70 @@ function MainPage() {
   //   updateBackgroundColor(); // 배경색 업데이트
   // };
 
+  const options = {
+    anchors: ['sectionOne', 'sectionTwo'],
+  };
+
   return (
-    <>
-      <div
-        style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
-        {/* 해 이미지 */}
-        {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
-          <img
-            src={sunSample}
-            style={{
-              position: 'absolute',
-              left: sunPosition.left,
-              top: sunPosition.top,
-              width: '200px',
-              transform: 'translate(-50%, -50%)',
-            }}
-            alt="Sun"
-          />
-        )}
-        {/* 달 이미지 */}
-        {(currentTime.getHours() >= 18 || currentTime.getHours() < 6) && (
-          <img
-            src={moonSample}
-            style={{
-              position: 'absolute',
-              left: moonPosition.left,
-              top: moonPosition.top,
-              width: '180px',
-              transform: 'translate(-50%, -50%)',
-            }}
-            alt="Moon"
-          />
-        )}
+    <SectionsContainer {...options}>
+      <Section>
+        <div
+          style={{ backgroundImage: backgroundColor }}
+          className="w-full h-screen overflow-hidden">
+          {/* 해 이미지 */}
+          {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
+            <img
+              src={sunSample}
+              style={{
+                position: 'absolute',
+                left: sunPosition.left,
+                top: sunPosition.top,
+                width: '200px',
+                transform: 'translate(-50%, -50%)',
+              }}
+              alt="Sun"
+            />
+          )}
+          {/* 달 이미지 */}
+          {(currentTime.getHours() >= 18 || currentTime.getHours() < 6) && (
+            <img
+              src={moonSample}
+              style={{
+                position: 'absolute',
+                left: moonPosition.left,
+                top: moonPosition.top,
+                width: '180px',
+                transform: 'translate(-50%, -50%)',
+              }}
+              alt="Moon"
+            />
+          )}
 
-        {!hasToken && (
-          <div className="z-30 flex items-center justify-center p-5">
-            <p className="mr-3 text-white">
-              메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
-            </p>
-            <button
-              type="button"
-              className="z-10 link-style"
-              onClick={() => handleOpenAuthentication()}>
-              인증 코드 입력
-            </button>
-          </div>
-        )}
+          {!hasToken && (
+            <div className="z-30 flex items-center justify-center p-5">
+              <p className="mr-3 text-white">
+                메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
+              </p>
+              <button
+                type="button"
+                className="z-10 link-style"
+                onClick={() => handleOpenAuthentication()}>
+                인증 코드 입력
+              </button>
+            </div>
+          )}
 
-        {hasToken && (
-          <div className="flex justify-end">
-            <p className="p-5 text-white">{AuthRole}</p>
-          </div>
-        )}
+          {hasToken && (
+            <div className="flex justify-end text-lg">
+              <p className="flex p-5 text-white">
+                {AuthRole}
+                <MdLogout className="mt-1 ml-4 cursor-pointer" />
+              </p>
+            </div>
+          )}
 
-        {/* 테스트용 시간 조절 버튼 */}
-        {/* <div>
+          {/* 테스트용 시간 조절 버튼 */}
+          {/* <div>
           <button
             type="button"
             className="text-yellow-500 bg-blue-500"
@@ -307,43 +307,48 @@ function MainPage() {
           </button>
           <span className="text-yellow-500">{formatTime(currentTime)}</span>
         </div> */}
-        {hasToken &&
-          messages.map((msg, index) => (
-            <div
-              key={msg.createdAt}
-              className={`absolute z-10 transform cursor-pointer text-[#fffff0] transition duration-300 ease-in-out hover:scale-150  ${
-                msg.isNew ? 'new-message' : ''
-              }`}
-              style={{
-                left: `${msg.x}%`,
-                top: `${msg.y}%`,
-                animationDelay: `0s, ${Math.floor(index % 3) * 5}s`,
-              }}
-              onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
-            >
-              {!msg.isNew &&
-                (index % 2 === 0 ? (
-                  <FaStar className="faStarAnimation" />
-                ) : (
-                  <div className="star" />
-                ))}
-            </div>
-          ))}
+          {hasToken &&
+            messages.map((msg, index) => (
+              <div
+                key={msg.createdAt}
+                className={`absolute z-10 transform cursor-pointer text-[#fffff0] transition duration-300 ease-in-out hover:scale-150  ${
+                  msg.isNew ? 'new-message' : ''
+                }`}
+                style={{
+                  left: `${msg.x}%`,
+                  top: `${msg.y}%`,
+                  animationDelay: `0s, ${Math.floor(index % 3) * 5}s`,
+                }}
+                onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
+              >
+                {!msg.isNew &&
+                  (index % 2 === 0 ? (
+                    <FaStar className="faStarAnimation" />
+                  ) : (
+                    <div className="star" />
+                  ))}
+              </div>
+            ))}
 
-        {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
-        {openMessage && hasToken && (
-          <MessageModal
-            handleOpenMessage={handleOpenMessage}
-            addMessage={addMessage}
-          />
-        )}
-      </div>
+          {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
+          {openMessage && hasToken && (
+            <MessageModal
+              handleOpenMessage={handleOpenMessage}
+              addMessage={addMessage}
+            />
+          )}
+        </div>
 
-      <a>
-        <span />
-      </a>
+        <a>
+          <span />
+        </a>
+      </Section>
 
-      <GalleryPage />
+      <Section>
+        <div className="h-screen overflow-hidden">
+          <GalleryPage />
+        </div>
+      </Section>
 
       {openAuthenticationModal && (
         <AuthenticationModal
@@ -359,7 +364,7 @@ function MainPage() {
       )}
 
       <ClockTest />
-    </>
+    </SectionsContainer>
   );
 }
 

@@ -4,7 +4,7 @@
 /* eslint-disable prettier/prettier */
 // prettier-ignore
 // 이미지 import
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import gallery1 from '../../public/img/April/gallery1.jpg';
 import gallery2 from '../../public/img/Ideaton/gallery2.jpg';
@@ -112,6 +112,10 @@ export default function GalleryPage() {
     setActiveSlider(images);
     setModalIsOpen(!modalIsOpen);
   };
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
 
   return (
     <div className="flex items-center justify-center h-screen p-6">

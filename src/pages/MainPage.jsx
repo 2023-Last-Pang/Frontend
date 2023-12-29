@@ -320,7 +320,7 @@ function MainPage() {
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             >
-              {index % 2 === 0 ? <FaStar className="faStarAnimation"/> : <div className="star"/>}
+              {!msg.isNew && (index % 2 === 0 ? <FaStar className="faStarAnimation"/> : <div className="star"/>)}
             </div>
         ))}
 

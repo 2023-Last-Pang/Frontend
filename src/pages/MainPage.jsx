@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
@@ -10,6 +11,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa6';
 import { MdLogout } from 'react-icons/md';
+import moment from 'moment';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -18,7 +20,6 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryPage from './GalleryPage';
-import moment from 'moment';
 import 'moment-timezone';
 
 import JoonMessage1 from '../components/JoonMessage1';
@@ -26,6 +27,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+import Footer from '../components/Footer';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -422,7 +424,7 @@ function MainPage() {
         <div className="">
           <img
             src={snowfield}
-            className="absolute w-full -bottom-4"
+            className="absolute bottom-0 w-full"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -437,23 +439,10 @@ function MainPage() {
         <span />
       </a>
 
-      <div className="flex h-screen flex-col items-center justify-center bg-[#EEF0F4]">
-        <GalleryPage />
+      <GalleryPage />
 
-        {/* Footer 추가 */}
-        <footer className="w-full text-center bg-gray-200">
-          <div className="mb-2">© 2023 테커 갤러리. All rights reserved.</div>
-          <div className="text-sm">
-            <span className="font-semibold">만든 사람들:</span>
-            <ul className="list-none">
-              <li>홍길동</li>
-              <li>김철수</li>
-              <li>박영희</li>
-              {/* 여기에 추가 제작자 이름을 넣으세요 */}
-            </ul>
-          </div>
-        </footer>
-      </div>
+      {/* Footer */}
+      <Footer />
 
       {openAuthenticationModal && (
         <AuthenticationModal

@@ -18,6 +18,14 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryPage from './GalleryPage';
+import moment from 'moment';
+import 'moment-timezone';
+
+import JoonMessage1 from '../components/JoonMessage1';
+import JoonMessage2 from '../components/JoonMessage2';
+import JoonMessage3 from '../components/JoonMessage3';
+
+import snowfield from '../../public/img/Message/snowfield.png';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -81,15 +89,26 @@ function MainPage() {
   }, [openAuthenticationModal]);
 
   // Date 객체 시간
-  const [currentTime, setCurrentTime] = useState(new Date());
+  // const [currentTime, setCurrentTime] = useState(new Date());
+
+  // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  const clientTime = new Date();
+
+  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+
+  const [currentTime, setCurrentTime] = useState(krCurr);
 
   // 배경색 상태
+  // eslint-disable-next-line no-unused-vars
   const [backgroundColor, setBackgroundColor] = useState();
 
   // 배경색을 시간에 따라 변경하는 함수
   const updateBackgroundColor = () => {
     const hour = currentTime.getHours();
-    // const minute = currentTime.getMinutes();
+    // eslint-disable-next-line no-unused-vars
+    const minute = currentTime.getMinutes();
     let background;
 
     if (hour >= 6 && hour < 17) {
@@ -126,7 +145,7 @@ function MainPage() {
     }
 
     // 화면 범위 내에서 움직이도록 조정
-    const x = 50 + (progress - 0.5) * 100; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
+    const x = 50 + (progress - 0.5) * 93; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
     const y = 60 - Math.abs(Math.sin(progress * Math.PI)) * 50; // 중앙(50%)을 기준으로 위아래로 50% 움직임
 
     return { left: `${x}%`, top: `${y}%` };
@@ -136,43 +155,91 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
-  // 마운트 시 실행됨
-  useEffect(() => {
-    // SSE 시간을 받아오는 함수
-    const fetchTime = () => {
-      const eventSource = new EventSource(
-        'https://lastpang-backend.fly.dev/api/v1/sse/time',
-      );
+  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  let intervalTime = null;
 
-      eventSource.onmessage = (e) => {
-        const serverTime = JSON.parse(e.data);
-        console.log(serverTime.unixTime); // 배포 시 삭제
-        setCurrentTime(new Date(serverTime.unixTime * 1000));
-      };
+  // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
+  const fetchServerTime = () => {
+    if (eventSource) {
+      eventSource.close(); // 기존 연결이 있다면 닫기
+    }
 
-      eventSource.onerror = (e) => {
-        eventSource.close();
+    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
 
-        if (e.error) {
-          // 에러 발생 시 할 일
-        }
+    eventSource.onmessage = (e) => {
+      const serverTime = moment(JSON.parse(e.data).unixTime);
 
-        if (e.target.readyState === EventSource.CLOSED) {
-          // 종료 시 할 일
-        }
-      };
+      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+      const clientTime = new Date();
+      const clientUnixTime = new Date().getTime();
+
+      const utc =
+        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+      const timeGap = serverTime - clientUnixTime;
+      console.log(timeGap);
+
+      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+
+      intervalTime = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          // prevTime을 밀리초 단위로 변환
+          const prevTimeMillis = prevTime.getTime();
+
+          // 1초 (1000 밀리초)와 timeGap을 더함
+          const newTimeMillis = prevTimeMillis + 1000;
+
+          // moment를 사용하여 한국 시간대의 Date 객체로 변환
+          return moment(newTimeMillis).toDate();
+        });
+      }, 1000);
     };
 
-    fetchTime();
+    eventSource.onerror = (e) => {
+      eventSource.close();
+      // 에러 처리 로직
+    };
+  };
 
-    updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
+  useEffect(() => {
+    fetchServerTime();
 
-    const timer = setInterval(() => {
-      const newTime = new Date();
-      setCurrentTime(newTime);
-    }, 60000); // 1분마다 시간 업데이트
+    // 매초 시간 업데이트
+    intervalTime = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        const prevTimeMillis = prevTime.getTime();
+        const newTimeMillis = prevTimeMillis + 1000;
 
-    return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+        return moment(newTimeMillis).toDate();
+      });
+    }, 1000);
+
+    // 매 5초마다 서버 시간 업데이트
+    // const serverTimeUpdateInterval = setInterval(() => {
+    //   fetchServerTime();
+    // }, 5000);
+
+    // 탭 활성화 감지
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchServerTime();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 정리
+    return () => {
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+      // clearInterval(serverTimeUpdateInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // 1초마다 실행됨
@@ -276,15 +343,14 @@ function MainPage() {
             alt="Moon"
           />
         )}
-
         {!hasToken && (
-          <div className="z-30 flex items-center justify-center p-5">
+          <div className="flex items-center justify-center p-5 font-omyu_pretty">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="z-10 link-style"
+              className="link-style font-omyu_pretty"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -351,6 +417,18 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+        <div className="">
+          <img
+            src={snowfield}
+            className="absolute bottom-0 w-full"
+            alt="Snowfield Background"
+          />
+          <div className="z-20 flex flex-row">
+            <JoonMessage1 />
+            <JoonMessage2 />
+            <JoonMessage3 />
+          </div>
+        </div>
       </div>
 
       <a>

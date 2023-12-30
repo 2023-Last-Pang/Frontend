@@ -45,12 +45,12 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
         <input
           type="text"
           onChange={(e) => handleRole(e.target.value)}
-          className="w-64 ml-1 appearance-none focus:outline-none"
+          className="w-64 ml-1 appearance-none font-omyu_pretty focus:outline-none"
           placeholder="인증코드 입력"
         />
       </div>
       {isError && (
-        <div className="absolute text-xs text-red-600">
+        <div className="absolute text-xs text-red-600 font-omyu_pretty">
           <span>앗! 인증코드가 올바르지 않아요</span>
           <br />
         </div>
@@ -59,14 +59,14 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
       <div className="flex justify-end mt-8">
         <button
           type="button"
-          className={`mr-3 h-8 px-4 py-1 text-sm text-[${color}] rounded bg-white shadow-md hover:bg-[#e7e7e7]`}
+          className={`font-omyu_pretty mr-3 h-8 px-4 py-1 text-sm text-[${color}] rounded bg-white shadow-md hover:bg-[#e7e7e7]`}
           onClick={() => handleOpenAuthentication()}>
           취소
         </button>
 
         <button
           type="submit"
-          className={`h-8 px-4 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
+          className={`font-omyu_pretty h-8 px-4 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
           onClick={() => handleSubmit()}>
           완료
         </button>

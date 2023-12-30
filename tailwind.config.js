@@ -19,6 +19,7 @@ export default {
         Wanju: ['TTWanjudaedunsancheB'],
         nanumPen: ['nanumPen', 'nanumPen'],
         Climate: ['Climate'],
+        omyu_pretty: ['omyu_pretty'],
       },
     },
   },

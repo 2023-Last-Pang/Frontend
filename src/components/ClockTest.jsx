@@ -8,13 +8,23 @@ import { useState, useEffect } from 'react';
 import useCountdown from '@bradgarropy/use-countdown';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
+import moment from 'moment';
+import 'moment-timezone';
 
 function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
   // const navigate = useNavigate();
+
+  // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  const clientTime = new Date();
+
+  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+
+  const [currentTime, setCurrentTime] = useState(krCurr);
 
   // 숫자가 한자리 수일때 앞에 0을 붙여줌
   const padWithZero = (number) => {
@@ -64,32 +74,91 @@ function ClockTest() {
     countdown.resume();
   }
 
-  useEffect(() => {
-    // SSE 시간을 받아오는 함수
-    const fetchTime = () => {
-      const eventSource = new EventSource(
-        'https://lastpang-backend.fly.dev/api/v1/sse/time',
-      );
+  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  let intervalTime = null;
 
-      eventSource.onmessage = (e) => {
-        const serverTime = JSON.parse(e.data);
-        setCurrentTime(new Date(serverTime.unixTime * 1000));
-      };
+  // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
+  const fetchServerTime = () => {
+    if (eventSource) {
+      eventSource.close(); // 기존 연결이 있다면 닫기
+    }
 
-      eventSource.onerror = (e) => {
-        eventSource.close();
+    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
 
-        if (e.error) {
-          // 에러 발생 시 할 일
-        }
+    eventSource.onmessage = (e) => {
+      const serverTime = moment(JSON.parse(e.data).unixTime);
 
-        if (e.target.readyState === EventSource.CLOSED) {
-          // 종료 시 할 일
-        }
-      };
+      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+      const clientTime = new Date();
+      const clientUnixTime = new Date().getTime();
+
+      const utc =
+        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+      const timeGap = serverTime - clientUnixTime;
+      console.log(timeGap);
+
+      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+
+      intervalTime = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          // prevTime을 밀리초 단위로 변환
+          const prevTimeMillis = prevTime.getTime();
+
+          // 1초 (1000 밀리초)와 timeGap을 더함
+          const newTimeMillis = prevTimeMillis + 1000;
+
+          // moment를 사용하여 한국 시간대의 Date 객체로 변환
+          return moment(newTimeMillis).toDate();
+        });
+      }, 1000);
     };
 
-    fetchTime();
+    eventSource.onerror = (e) => {
+      eventSource.close();
+      // 에러 처리 로직
+    };
+  };
+
+  useEffect(() => {
+    fetchServerTime();
+
+    // 매초 시간 업데이트
+    intervalTime = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        const prevTimeMillis = prevTime.getTime();
+        const newTimeMillis = prevTimeMillis + 1000;
+
+        return moment(newTimeMillis).toDate();
+      });
+    }, 1000);
+
+    // 매 5초마다 서버 시간 업데이트
+    // const serverTimeUpdateInterval = setInterval(() => {
+    //   fetchServerTime();
+    // }, 5000);
+
+    // 탭 활성화 감지
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchServerTime();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 정리
+    return () => {
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+      // clearInterval(serverTimeUpdateInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -117,8 +186,7 @@ function ClockTest() {
               scale: 1.2 + 3 / countdown.seconds,
             }}
             key={countdown.seconds}
-            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent"
-          >
+            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent">
             {countdown.seconds}
           </motion.span>
         </div>

@@ -11,7 +11,7 @@ export default function AuthenticationModal({ handleOpenAuthentication }) {
           </div>
           <InputAuth
             handleOpenAuthentication={handleOpenAuthentication}
-            color="#2B5981"
+            color="#e26a68"
           />
         </div>
       </div>

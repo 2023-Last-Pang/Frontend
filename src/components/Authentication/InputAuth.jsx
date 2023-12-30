@@ -41,22 +41,22 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
 
   return (
     <div>
-      <div className="mt-2 w-64 border-b-2 focus-within:border-blue-500">
+      <div className="w-64 mt-2 border-b-2 focus-within:border-blue-500">
         <input
           type="text"
           onChange={(e) => handleRole(e.target.value)}
-          className="font-omyu_pretty ml-1 w-64 appearance-none focus:outline-none"
+          className="w-64 ml-1 appearance-none font-omyu_pretty focus:outline-none"
           placeholder="인증코드 입력"
         />
       </div>
       {isError && (
-        <div className="font-omyu_pretty absolute text-xs text-red-600">
+        <div className="absolute text-xs text-red-600 font-omyu_pretty">
           <span>앗! 인증코드가 올바르지 않아요</span>
           <br />
         </div>
       )}
 
-      <div className="mt-8 flex justify-end">
+      <div className="flex justify-end mt-8">
         <button
           type="button"
           className={`font-omyu_pretty mr-3 h-8 px-4 py-1 text-sm text-[${color}] rounded bg-white shadow-md hover:bg-[#e7e7e7]`}

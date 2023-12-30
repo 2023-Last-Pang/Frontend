@@ -226,7 +226,11 @@ function MainPage() {
     // 탭 활성화 감지
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchServerTime();
+        if (eventSource) {
+          // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
+          eventSource.close();
+          fetchServerTime();
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -236,7 +240,9 @@ function MainPage() {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      // clearInterval(serverTimeUpdateInterval);
+      if (eventSource) {
+        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
@@ -343,7 +349,6 @@ function MainPage() {
           />
         )}
         {!hasToken && (
-
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
             <p className="mr-3 text-white font-omyu_pretty">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요

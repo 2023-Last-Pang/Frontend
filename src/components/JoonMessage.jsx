@@ -32,7 +32,7 @@ function AndrewMessage() {
               height: '300px',
             }}>
             <img src={message} alt="Message" className="h-full w-full" />
-            <p className="font-nanumPen absolute left-1/2 top-[43%] z-30 -translate-x-1/2 -translate-y-1/2 transform text-sm text-black">
+            <p className="font-omyu_pretty absolute left-1/2 top-[43%] z-30 -translate-x-1/2 -translate-y-1/2 transform text-sm text-black">
               Joon님의 메시지
             </p>
           </div>

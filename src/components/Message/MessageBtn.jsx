@@ -8,7 +8,7 @@ export default function MessageBtn({ handleOpenMessage }) {
         onClick={() => {
           handleOpenMessage();
         }}>
-        <span className="relative">메시지 작성</span>
+        <span className="relative font-omyu_pretty">메시지 작성</span>
       </button>
     </div>
   );

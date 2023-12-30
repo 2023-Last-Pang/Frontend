@@ -10,6 +10,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa6';
 import { MdLogout } from 'react-icons/md';
+import moment from 'moment';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -18,7 +19,6 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryPage from './GalleryPage';
-import moment from 'moment';
 import 'moment-timezone';
 
 import JoonMessage1 from '../components/JoonMessage1';
@@ -160,9 +160,7 @@ function MainPage() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
-    );
+    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
@@ -351,13 +349,13 @@ function MainPage() {
           />
         )}
         {!hasToken && (
-          <div className="font-omyu_pretty flex items-center justify-center p-5">
-            <p className="mr-3 text-white">
+          <div className="flex items-center justify-center p-5 font-omyu_pretty">
+            <p className="mr-3 text-white font-omyu_pretty">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style font-omyu_pretty"
+              className="link-style font-omyu_pretty z-10"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -366,7 +364,7 @@ function MainPage() {
 
         {hasToken && (
           <div className="flex justify-end text-lg">
-            <p className="flex p-5 text-white">
+            <p className="flex p-5 text-white font-omyu_pretty">
               {AuthRole}
               <MdLogout
                 className="ml-5 mt-1 cursor-pointer"

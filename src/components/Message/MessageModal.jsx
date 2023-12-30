@@ -26,7 +26,7 @@ export default function MessageModal({
             <button
               type="button"
               onClick={() => closeModal()}
-              className="bottom-0 mt-1 h-8 rounded bg-white px-4 py-1 text-sm text-[#e26a68] shadow-md hover:bg-[#e7e7e7]">
+              className="font-omyu_pretty bottom-0 mt-1 h-8 rounded bg-white px-4 py-1 text-sm text-[#e26a68] shadow-md hover:bg-[#e7e7e7]">
               닫기
             </button>
           </div>

@@ -92,3 +92,16 @@ a span {
     opacity: 0;
   }
 }
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 2s ease-out;
+}

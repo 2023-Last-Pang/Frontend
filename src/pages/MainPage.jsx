@@ -160,9 +160,7 @@ function MainPage() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
-    );
+    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
@@ -315,7 +313,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="first-page scrollbar-hide h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -345,13 +343,14 @@ function MainPage() {
           />
         )}
         {!hasToken && (
+
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
             <p className="mr-3 text-white font-omyu_pretty">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style font-omyu_pretty"
+              className="link-style font-omyu_pretty z-10"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -363,7 +362,7 @@ function MainPage() {
             <p className="flex p-5 text-white font-omyu_pretty">
               {AuthRole}
               <MdLogout
-                className="mt-1 ml-5 cursor-pointer"
+                className="ml-5 mt-1 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>

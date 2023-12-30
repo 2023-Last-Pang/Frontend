@@ -14,12 +14,12 @@ export default function MessageModal({
 
   if (message) {
     return (
-      <div className="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen text-center bg-black bg-opacity-20">
-        <div className="flex flex-col justify-center bg-cover h-80 w-80 bg-message-image">
-          <div className="p-10 mt-5 ">
-            <div className="flex flex-col justify-between overflow-auto font-omyu_pretty h-52 w-60">
-              <p className="text-lg message-content">{message.content}</p>
-              <p className="text-right font-omyu_pretty">
+      <div className="fixed left-0 top-0 z-10 flex h-screen w-full items-center justify-center bg-black bg-opacity-20 text-center">
+        <div className="flex h-80 w-80 flex-col justify-center bg-message-image bg-cover">
+          <div className="mt-5 p-10 ">
+            <div className="font-omyu_pretty relative flex h-52 w-60 flex-col items-center justify-center overflow-auto">
+              <p className="message-content flex text-lg">{message.content}</p>
+              <p className="font-omyu_pretty absolute bottom-0 right-0 text-right">
                 - {message.nickname} -
               </p>
             </div>
@@ -36,7 +36,7 @@ export default function MessageModal({
   }
 
   return (
-    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full">
+    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center">
       <div className="w-84 mt-[30rem] flex h-80 flex-col justify-center bg-message-image bg-cover">
         {role === techeerRole && (
           <RetryAuth handleOpenMessage={handleOpenMessage} color="#e26a68" />

@@ -124,7 +124,7 @@ function MainPage() {
     }
 
     // 화면 범위 내에서 움직이도록 조정
-    const x = 50 + (progress - 0.5) * 100; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
+    const x = 50 + (progress - 0.5) * 93; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
     const y = 60 - Math.abs(Math.sin(progress * Math.PI)) * 50; // 중앙(50%)을 기준으로 위아래로 50% 움직임
 
     return { left: `${x}%`, top: `${y}%` };
@@ -285,7 +285,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page bg-linear-gradient , [#193D60]) h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
+      <div className="first-page bg-linear-gradient , [#193D60]) relative h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img

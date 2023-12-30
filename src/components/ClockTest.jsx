@@ -162,7 +162,13 @@ function ClockTest() {
     // 탭 활성화 감지
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
+        // 탭이 활성화되면 서버 시간을 다시 가져옵니다.
         fetchServerTime();
+      } else if (document.visibilityState === 'hidden') {
+        // 탭이 비활성화되면 EventSource 연결을 닫습니다.
+        if (eventSource) {
+          eventSource.close();
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -172,7 +178,9 @@ function ClockTest() {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      // clearInterval(serverTimeUpdateInterval);
+      if (eventSource) {
+        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);

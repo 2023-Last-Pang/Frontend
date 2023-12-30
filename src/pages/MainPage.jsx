@@ -228,7 +228,11 @@ function MainPage() {
     // 탭 활성화 감지
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchServerTime();
+        if (eventSource) {
+          // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
+          eventSource.close();
+          fetchServerTime();
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -238,7 +242,9 @@ function MainPage() {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      // clearInterval(serverTimeUpdateInterval);
+      if (eventSource) {
+        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
@@ -315,7 +321,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="first-page scrollbar-hide h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -345,7 +351,7 @@ function MainPage() {
           />
         )}
         {!hasToken && (
-          <div className="flex items-center justify-center p-5 font-omyu_pretty">
+          <div className="font-omyu_pretty flex items-center justify-center p-5">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
@@ -363,7 +369,7 @@ function MainPage() {
             <p className="flex p-5 text-white">
               {AuthRole}
               <MdLogout
-                className="mt-1 ml-5 cursor-pointer"
+                className="ml-5 mt-1 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>

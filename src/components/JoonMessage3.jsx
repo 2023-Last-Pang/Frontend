@@ -29,13 +29,10 @@ function JoonMessage3() {
               alt="Message"
               className="h-full w-full object-cover"
             />
-            <div className="absolute right-[6rem] top-[2rem] flex w-[9vw] -translate-x-[2%] -translate-y-[0.2%] transform flex-col items-center md:w-[9vw]">
-              <div className="flex w-full flex-col items-center justify-center">
-                <p className="font-nanumPen text-lg text-black">
-                  24년에도 재밌는 추억 많이 쌓으면서 코딩해요!!😊
-                </p>
-                <p className="font-nanumPen mt-2 text-lg text-black">
-                  - 수현 -
+            <div className="absolute right-[5.8rem] top-[2rem] flex w-[9vw] -translate-x-[2%] -translate-y-[0.2%] transform flex-col items-center md:w-[9vw]">
+              <div className="flex w-full flex-col items-center justify-center text-center font-omyu_pretty text-base">
+                <p className=" text-black">
+                  24년에도 재밌는 추억 많이 쌓으면서 코딩해요!!😊 - 수현 -
                 </p>
               </div>
             </div>

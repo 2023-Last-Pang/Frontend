@@ -1,0 +1,44 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px white;
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 20px white;
+  }
+}
+
+.star {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: white;
+  animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out;
+}
+.new-message {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: yellow;
+  animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out;
+}
+
+.link-style {
+  color: #00A3FF;        /* 파란색 텍스트 */
+  text-decoration: underline; /* 밑줄 추가 */
+  cursor: pointer;    /* 마우스 오버 시 포인터 커서 표시 */
+}
+
+.message-content {
+  white-space: pre-wrap;
+}

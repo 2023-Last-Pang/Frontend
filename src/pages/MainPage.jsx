@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -6,6 +8,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
+import { FaStar } from 'react-icons/fa6';
+import { MdLogout } from 'react-icons/md';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -13,9 +17,15 @@ import sunSample from '../assets/img/sun.svg';
 import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
-import GalleryTest from './GalleryTest';
+import GalleryPage from './GalleryPage';
 import moment from 'moment';
 import 'moment-timezone';
+
+import JoonMessage1 from '../components/JoonMessage1';
+import JoonMessage2 from '../components/JoonMessage2';
+import JoonMessage3 from '../components/JoonMessage3';
+
+import snowfield from '../../public/img/Message/snowfield.png';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -40,6 +50,11 @@ function MainPage() {
       setMessages(fetchedMessages);
     } catch (error) {
       console.log(error);
+      if (error.response.data.statusCode === 401) {
+        alert('세션이 만료되었습니다. 다시 로그인해주세요!');
+        localStorage.clear();
+        window.location.reload();
+      }
     }
   };
 
@@ -62,15 +77,19 @@ function MainPage() {
     const toggleScroll = (isModalOpen) => {
       document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
     };
+    document.body.style.overflowX = 'hidden';
 
     // 모달 상태 변경 감지
-    toggleScroll(openAuthenticationModal || showMessageModal || openMessage);
+    toggleScroll(openAuthenticationModal);
 
     // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openAuthenticationModal, showMessageModal, openMessage]);
+  }, [openAuthenticationModal]);
+
+  // Date 객체 시간
+  // const [currentTime, setCurrentTime] = useState(new Date());
 
   // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
   const clientTime = new Date();
@@ -82,11 +101,13 @@ function MainPage() {
   const [currentTime, setCurrentTime] = useState(krCurr);
 
   // 배경색 상태
+  // eslint-disable-next-line no-unused-vars
   const [backgroundColor, setBackgroundColor] = useState();
 
   // 배경색을 시간에 따라 변경하는 함수
   const updateBackgroundColor = () => {
     const hour = currentTime.getHours();
+    // eslint-disable-next-line no-unused-vars
     const minute = currentTime.getMinutes();
     let background;
 
@@ -124,7 +145,7 @@ function MainPage() {
     }
 
     // 화면 범위 내에서 움직이도록 조정
-    const x = 50 + (progress - 0.5) * 100; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
+    const x = 50 + (progress - 0.5) * 93; // 중앙(50%)을 기준으로 좌우로 50%씩 움직임
     const y = 60 - Math.abs(Math.sin(progress * Math.PI)) * 50; // 중앙(50%)을 기준으로 위아래로 50% 움직임
 
     return { left: `${x}%`, top: `${y}%` };
@@ -237,6 +258,12 @@ function MainPage() {
     setShowMessageModal(true); // 메시지 모달 열기
   };
 
+  const handleLogoutClick = () => {
+    localStorage.clear();
+    alert('로그아웃되었습니다');
+    window.location.reload();
+  };
+
   const addMessage = (msgContent) => {
     const newMessage = {
       createdAt: Date.now(), // 현재 시간을 기반으로 한 고유 ID 생성
@@ -285,7 +312,9 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page bg-linear-gradient , [#193D60]) h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
+      <div
+        style={{ backgroundImage: backgroundColor }}
+        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -314,15 +343,14 @@ function MainPage() {
             alt="Moon"
           />
         )}
-
         {!hasToken && (
-          <div className="flex items-center justify-center p-5">
+          <div className="flex items-center justify-center p-5 font-omyu_pretty">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style"
+              className="link-style font-omyu_pretty"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -330,8 +358,14 @@ function MainPage() {
         )}
 
         {hasToken && (
-          <div className="flex justify-end">
-            <p className="p-5 text-white">{AuthRole}</p>
+          <div className="flex justify-end text-lg">
+            <p className="flex p-5 text-white">
+              {AuthRole}
+              <MdLogout
+                className="mt-1 ml-5 cursor-pointer"
+                onClick={handleLogoutClick}
+              />
+            </p>
           </div>
         )}
 
@@ -339,14 +373,14 @@ function MainPage() {
         {/* <div>
           <button
             type="button"
-            className="bg-blue-500 text-yellow-500"
+            className="text-yellow-500 bg-blue-500"
             onClick={() => updateCurrentTime(-10)} // 30분 감소
           >
             -10분
           </button>
           <button
             type="button"
-            className="bg-blue-500 text-yellow-500"
+            className="text-yellow-500 bg-blue-500"
             onClick={() => updateCurrentTime(10)} // 30분 증가
           >
             +10분
@@ -357,8 +391,8 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute cursor-pointer text-white  ${
-                msg.isNew ? 'new-message' : 'star'
+              className={`absolute z-10 transform cursor-pointer text-[#fffff0] transition duration-300 ease-in-out hover:scale-150  ${
+                msg.isNew ? 'new-message' : ''
               }`}
               style={{
                 left: `${msg.x}%`,
@@ -366,7 +400,14 @@ function MainPage() {
                 animationDelay: `0s, ${Math.floor(index % 3) * 5}s`,
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
-            />
+            >
+              {!msg.isNew &&
+                (index % 2 === 0 ? (
+                  <FaStar className="faStarAnimation" />
+                ) : (
+                  <div className="star" />
+                ))}
+            </div>
           ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
@@ -376,11 +417,25 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+        <div className="">
+          <img
+            src={snowfield}
+            className="absolute bottom-0 w-full"
+            alt="Snowfield Background"
+          />
+          <div className="z-20 flex flex-row">
+            <JoonMessage1 />
+            <JoonMessage2 />
+            <JoonMessage3 />
+          </div>
+        </div>
       </div>
 
-      <div className="top-50 second-page fixed left-0 h-screen w-full overflow-hidden">
-        <GalleryTest />
-      </div>
+      <a>
+        <span />
+      </a>
+
+      <GalleryPage />
 
       {openAuthenticationModal && (
         <AuthenticationModal

@@ -176,7 +176,7 @@ function ClockTest() {
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-80">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{

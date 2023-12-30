@@ -4,7 +4,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useCountdown from '@bradgarropy/use-countdown';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
@@ -15,14 +15,14 @@ function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
-  const clientTime = new Date();
+  // const clientTime = new Date();
 
-  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+  // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment().tz('Asia/Seoul');
 
   const [currentTime, setCurrentTime] = useState(krCurr);
 
@@ -33,20 +33,22 @@ function ClockTest() {
 
   const calculateTimeDifference = () => {
     const now = currentTime;
-    const newYear = new Date('January 1, 2024 00:00:00');
+    const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
     const diff = newYear - now;
 
     // D-DAY 시간
-    // const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    // const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    // const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    // const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    const countDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const countHours = Math.floor(
+      (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const countMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const countSeconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     // 현재 시간
     // const days = now.getDate();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
+    const hours = now.hours();
+    const minutes = now.minutes();
+    const seconds = now.seconds();
 
     setTimeDifference(
       `${padWithZero(hours)} : ${padWithZero(minutes)} : ${padWithZero(
@@ -54,13 +56,22 @@ function ClockTest() {
       )}`,
     );
 
-    if (hours === 0 && minutes === 0 && seconds <= 10) {
+    if (
+      countDays == 0 &&
+      countHours === 0 &&
+      countMinutes === 0 &&
+      countSeconds <= 10
+    ) {
       setStartCountDown(true);
     }
 
     // 0초가 되면 '/' 페이지로 이동
-    // if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-    // }
+    if (
+      countDays == 0 &&
+      (countHours == 0) & (countMinutes == 0) & (countSeconds == 0)
+    ) {
+      navigate('/fire');
+    }
   };
 
   const countdown = useCountdown({
@@ -90,16 +101,15 @@ function ClockTest() {
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();
-      const clientUnixTime = new Date().getTime();
 
-      const utc =
-        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      // const krCurr = moment().tz('Asia/Seoul');
 
-      const timeGap = serverTime - clientUnixTime;
+      const timeGap = serverTime - clientTime.getTime();
       console.log(timeGap);
 
-      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+      setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
 
       if (intervalTime) {
         clearInterval(intervalTime);
@@ -108,13 +118,13 @@ function ClockTest() {
       intervalTime = setInterval(() => {
         setCurrentTime((prevTime) => {
           // prevTime을 밀리초 단위로 변환
-          const prevTimeMillis = prevTime.getTime();
+          const prevTimeMillis = prevTime.valueOf();
 
           // 1초 (1000 밀리초)와 timeGap을 더함
           const newTimeMillis = prevTimeMillis + 1000;
 
           // moment를 사용하여 한국 시간대의 Date 객체로 변환
-          return moment(newTimeMillis).toDate();
+          return moment(newTimeMillis).tz('Asia/Seoul');
         });
       }, 1000);
     };
@@ -131,10 +141,14 @@ function ClockTest() {
     // 매초 시간 업데이트
     intervalTime = setInterval(() => {
       setCurrentTime((prevTime) => {
-        const prevTimeMillis = prevTime.getTime();
+        // prevTime을 밀리초 단위로 변환
+        const prevTimeMillis = prevTime.valueOf();
+
+        // 1초 (1000 밀리초)와 timeGap을 더함
         const newTimeMillis = prevTimeMillis + 1000;
 
-        return moment(newTimeMillis).toDate();
+        // moment를 사용하여 한국 시간대의 Date 객체로 변환
+        return moment(newTimeMillis).tz('Asia/Seoul');
       });
     }, 1000);
 
@@ -176,14 +190,13 @@ function ClockTest() {
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-80">
+        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{
-              ease: 'easeOut',
               duration: 0.8,
               opacity: 1,
-              scale: 1.2 + 3 / countdown.seconds,
+              scale: 2,
             }}
             key={countdown.seconds}
             className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent">

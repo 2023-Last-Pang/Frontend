@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
@@ -10,6 +11,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa6';
 import { MdLogout } from 'react-icons/md';
+import moment from 'moment';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -18,7 +20,6 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryPage from './GalleryPage';
-import moment from 'moment';
 import 'moment-timezone';
 
 import JoonMessage1 from '../components/JoonMessage1';
@@ -26,6 +27,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+import Footer from '../components/Footer';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -49,8 +51,7 @@ function MainPage() {
       }));
       setMessages(fetchedMessages);
     } catch (error) {
-      console.log(error);
-      if (error.response.data.statusCode === 401) {
+      if (error.response.status === 401) {
         alert('세션이 만료되었습니다. 다시 로그인해주세요!');
         localStorage.clear();
         window.location.reload();
@@ -226,7 +227,11 @@ function MainPage() {
     // 탭 활성화 감지
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchServerTime();
+        if (eventSource) {
+          // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
+          eventSource.close();
+          fetchServerTime();
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -236,7 +241,9 @@ function MainPage() {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      // clearInterval(serverTimeUpdateInterval);
+      if (eventSource) {
+        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
@@ -313,7 +320,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="first-page scrollbar-hide h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -344,12 +351,12 @@ function MainPage() {
         )}
         {!hasToken && (
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
-            <p className="mr-3 text-white">
+            <p className="mr-3 text-white font-omyu_pretty">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style font-omyu_pretty"
+              className="link-style font-omyu_pretty z-10"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -358,10 +365,10 @@ function MainPage() {
 
         {hasToken && (
           <div className="flex justify-end text-lg">
-            <p className="flex p-5 text-white">
+            <p className="flex p-5 text-white font-omyu_pretty">
               {AuthRole}
               <MdLogout
-                className="mt-1 ml-5 cursor-pointer"
+                className="ml-5 mt-1 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>
@@ -416,10 +423,11 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+
         <div className="">
           <img
             src={snowfield}
-            className="absolute bottom-0 w-full"
+            className="absolute bottom-0 z-0 w-full"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -435,6 +443,9 @@ function MainPage() {
       </a>
 
       <GalleryPage />
+
+      {/* Footer */}
+      <Footer />
 
       {openAuthenticationModal && (
         <AuthenticationModal

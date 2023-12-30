@@ -30,6 +30,11 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
         });
     } catch (error) {
       alert(error.response.data.errors[0].constraints.maxLength);
+      if (error.response.status === 401) {
+        alert('세션이 만료되었습니다. 다시 로그인해주세요!');
+        localStorage.clear();
+        window.location.reload();
+      }
     }
   };
 
@@ -42,7 +47,7 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
   }
 
   return (
-    <div className="mt-5 p-8">
+    <div className="p-8 mt-5">
       <input
         type="text"
         placeholder="작성자"

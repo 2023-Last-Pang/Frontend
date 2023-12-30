@@ -161,7 +161,8 @@ function MainPage() {
     }
 
     eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
+      // 'https://lastpang-backend.fly.dev/api/v1/sse/time',
+      'http://localhost:8000/api/v1/sse/time',
     );
 
     eventSource.onmessage = (e) => {
@@ -315,7 +316,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -421,7 +422,7 @@ function MainPage() {
         <div className="">
           <img
             src={snowfield}
-            className="absolute bottom-0 w-full"
+            className="absolute w-full -bottom-4"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -436,7 +437,23 @@ function MainPage() {
         <span />
       </a>
 
-      <GalleryPage />
+      <div className="flex h-screen flex-col items-center justify-center bg-[#EEF0F4]">
+        <GalleryPage />
+
+        {/* Footer 추가 */}
+        <footer className="w-full text-center bg-gray-200">
+          <div className="mb-2">© 2023 테커 갤러리. All rights reserved.</div>
+          <div className="text-sm">
+            <span className="font-semibold">만든 사람들:</span>
+            <ul className="list-none">
+              <li>홍길동</li>
+              <li>김철수</li>
+              <li>박영희</li>
+              {/* 여기에 추가 제작자 이름을 넣으세요 */}
+            </ul>
+          </div>
+        </footer>
+      </div>
 
       {openAuthenticationModal && (
         <AuthenticationModal

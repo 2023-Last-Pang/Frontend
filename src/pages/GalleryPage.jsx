@@ -128,8 +128,13 @@ export default function GalleryPage() {
   }, [modalIsOpen]);
 
   return (
-    <div className="flex items-center justify-center h-screen p-6">
-      <div className="grid grid-cols-3 grid-rows-2 gap-6">
+    <>
+      {/* 제목 */}
+      <div className="mb-6 text-4xl font-omyu_pretty">
+        <span>{'< 2023 테커 갤러리 >'}</span>
+      </div>
+
+      <div className="grid grid-cols-3 grid-rows-2 gap-6 p-6">
         {galleryData.map((gallery, index) => (
           <div
             key={index}
@@ -163,6 +168,6 @@ export default function GalleryPage() {
           <Slider setModalIsOpen={setModalIsOpen} images={activeSlider} />
         </div>
       )}
-    </div>
+    </>
   );
 }

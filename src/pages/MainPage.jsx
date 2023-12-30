@@ -92,11 +92,7 @@ function MainPage() {
   // const [currentTime, setCurrentTime] = useState(new Date());
 
   // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
-  const clientTime = new Date();
-
-  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+  const krCurr = moment().tz('Asia/Seoul');
 
   const [currentTime, setCurrentTime] = useState(krCurr);
 
@@ -106,9 +102,9 @@ function MainPage() {
 
   // 배경색을 시간에 따라 변경하는 함수
   const updateBackgroundColor = () => {
-    const hour = currentTime.getHours();
+    const hour = currentTime.hours();
     // eslint-disable-next-line no-unused-vars
-    const minute = currentTime.getMinutes();
+    const minute = currentTime.minutes();
     let background;
 
     if (hour >= 6 && hour < 17) {
@@ -128,8 +124,8 @@ function MainPage() {
 
   // 해와 달의 위치를 계산하는 함수
   const calculatePosition = (isSun) => {
-    const hour = currentTime.getHours();
-    const minute = currentTime.getMinutes();
+    const hour = currentTime.hours();
+    const minute = currentTime.minutes();
     let totalMinutes;
     let progress;
 
@@ -171,16 +167,15 @@ function MainPage() {
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();
-      const clientUnixTime = new Date().getTime();
 
-      const utc =
-        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      // const krCurr = moment().tz('Asia/Seoul');
 
-      const timeGap = serverTime - clientUnixTime;
+      const timeGap = serverTime - clientTime.getTime();
       console.log(timeGap);
 
-      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+      setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
 
       if (intervalTime) {
         clearInterval(intervalTime);
@@ -189,13 +184,13 @@ function MainPage() {
       intervalTime = setInterval(() => {
         setCurrentTime((prevTime) => {
           // prevTime을 밀리초 단위로 변환
-          const prevTimeMillis = prevTime.getTime();
+          const prevTimeMillis = prevTime.valueOf();
 
           // 1초 (1000 밀리초)와 timeGap을 더함
           const newTimeMillis = prevTimeMillis + 1000;
 
           // moment를 사용하여 한국 시간대의 Date 객체로 변환
-          return moment(newTimeMillis).toDate();
+          return moment(newTimeMillis).tz('Asia/Seoul');
         });
       }, 1000);
     };
@@ -212,10 +207,14 @@ function MainPage() {
     // 매초 시간 업데이트
     intervalTime = setInterval(() => {
       setCurrentTime((prevTime) => {
-        const prevTimeMillis = prevTime.getTime();
+        // prevTime을 밀리초 단위로 변환
+        const prevTimeMillis = prevTime.valueOf();
+
+        // 1초 (1000 밀리초)와 timeGap을 더함
         const newTimeMillis = prevTimeMillis + 1000;
 
-        return moment(newTimeMillis).toDate();
+        // moment를 사용하여 한국 시간대의 Date 객체로 변환
+        return moment(newTimeMillis).tz('Asia/Seoul');
       });
     }, 1000);
 
@@ -316,7 +315,7 @@ function MainPage() {
         style={{ backgroundImage: backgroundColor }}
         className="w-full h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
-        {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
+        {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
             src={sunSample}
             style={{
@@ -330,7 +329,7 @@ function MainPage() {
           />
         )}
         {/* 달 이미지 */}
-        {(currentTime.getHours() >= 18 || currentTime.getHours() < 6) && (
+        {(currentTime.hours() >= 18 || currentTime.hours() < 6) && (
           <img
             src={moonSample}
             style={{

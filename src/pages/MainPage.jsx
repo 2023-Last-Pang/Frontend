@@ -14,6 +14,8 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryTest from './GalleryTest';
+import moment from 'moment';
+import 'moment-timezone';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -70,8 +72,14 @@ function MainPage() {
     };
   }, [openAuthenticationModal, showMessageModal, openMessage]);
 
-  // Date 객체 시간
-  const [currentTime, setCurrentTime] = useState(new Date());
+  // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  const clientTime = new Date();
+
+  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+
+  const [currentTime, setCurrentTime] = useState(krCurr);
 
   // 배경색 상태
   const [backgroundColor, setBackgroundColor] = useState();
@@ -138,16 +146,36 @@ function MainPage() {
     eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
 
     eventSource.onmessage = (e) => {
-      const serverTime = JSON.parse(e.data);
-      console.log(serverTime.unixTime); // 배포 시 삭제
-      setCurrentTime(new Date(serverTime.unixTime));
+      const serverTime = moment(JSON.parse(e.data).unixTime);
+
+      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+      const clientTime = new Date();
+      const clientUnixTime = new Date().getTime();
+
+      const utc =
+        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+      const timeGap = serverTime - clientUnixTime;
+      console.log(timeGap);
+
+      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
 
       if (intervalTime) {
         clearInterval(intervalTime);
       }
 
       intervalTime = setInterval(() => {
-        setCurrentTime((prevTime) => new Date(prevTime.getTime() + 1000));
+        setCurrentTime((prevTime) => {
+          // prevTime을 밀리초 단위로 변환
+          const prevTimeMillis = prevTime.getTime();
+
+          // 1초 (1000 밀리초)와 timeGap을 더함
+          const newTimeMillis = prevTimeMillis + 1000;
+
+          // moment를 사용하여 한국 시간대의 Date 객체로 변환
+          return moment(newTimeMillis).toDate();
+        });
       }, 1000);
     };
 
@@ -162,7 +190,12 @@ function MainPage() {
 
     // 매초 시간 업데이트
     intervalTime = setInterval(() => {
-      setCurrentTime(new Date());
+      setCurrentTime((prevTime) => {
+        const prevTimeMillis = prevTime.getTime();
+        const newTimeMillis = prevTimeMillis + 1000;
+
+        return moment(newTimeMillis).toDate();
+      });
     }, 1000);
 
     // 매 5초마다 서버 시간 업데이트

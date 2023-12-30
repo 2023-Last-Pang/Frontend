@@ -8,7 +8,8 @@
 }
 
 @keyframes twinkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     box-shadow: 0 0 10px white;
   }
@@ -23,22 +24,133 @@
   height: 5px;
   border-radius: 50%;
   background-color: white;
-  animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out;
+  animation:
+    fadeIn 3s ease-in,
+    twinkle 5s infinite ease-in-out;
 }
 .new-message {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background-color: yellow;
-  animation: fadeIn 3s ease-in, twinkle 5s infinite ease-in-out;
+  animation:
+    fadeIn 3s ease-in,
+    twinkle 5s infinite ease-in-out;
 }
 
 .link-style {
-  color: #00A3FF;        /* 파란색 텍스트 */
+  color: #00a3ff; /* 파란색 텍스트 */
   text-decoration: underline; /* 밑줄 추가 */
-  cursor: pointer;    /* 마우스 오버 시 포인터 커서 표시 */
+  cursor: pointer; /* 마우스 오버 시 포인터 커서 표시 */
 }
 
 .message-content {
   white-space: pre-wrap;
+}
+
+.special-size img {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+}
+
+.special-size img {
+  height: 180px;
+  object-fit: cover;
+}
+
+@media (min-width: 400px) {
+  .special-size img {
+    height: 213px;
+  }
+}
+
+@media (min-width: 500px) {
+  .special-size img {
+    height: 275px;
+  }
+}
+
+@media (min-width: 768px) {
+  .special-size img {
+    height: 200px;
+  }
+}
+
+@media (min-width: 800px) {
+  .special-size img {
+    height: 213px;
+  }
+}
+
+@media (min-width: 900px) {
+  .special-size img {
+    height: 220px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .special-size img {
+    height: 250px;
+  }
+}
+
+@media (min-width: 1020px) {
+  .special-size img {
+    height: 175px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .special-size img {
+    height: 190px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .special-size img {
+    height: 222px;
+  }
+}
+
+@media (min-width: 1300px) {
+  .special-size img {
+    height: 222px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .special-size img {
+    height: 265px;
+  }
+}
+
+@media (min-width: 1500px) {
+  .special-size img {
+    height: 263px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .special-size img {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1700px) {
+  .special-size img {
+    height: 310px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .special-size img {
+    height: 315px;
+  }
+}
+
+@media (min-width: 1900px) {
+  .special-size img {
+    height: 345px;
+  }
 }

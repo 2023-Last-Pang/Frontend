@@ -17,6 +17,12 @@ import GalleryTest from './GalleryTest';
 import moment from 'moment';
 import 'moment-timezone';
 
+import JoonMessage1 from '../components/JoonMessage1';
+import JoonMessage2 from '../components/JoonMessage2';
+import JoonMessage3 from '../components/JoonMessage3';
+
+import snowfield from '../../public/img/Message/snowfield.png';
+
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
@@ -322,7 +328,6 @@ function MainPage() {
             alt="Moon"
           />
         )}
-
         {!hasToken && (
           <div className="font-omyu_pretty flex items-center justify-center p-5">
             <p className="mr-3 text-white">
@@ -385,6 +390,18 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+        <div className="">
+          <img
+            src={snowfield}
+            className="absolute bottom-0 w-full"
+            alt="Snowfield Background"
+          />
+          <div className="z-20 flex flex-row">
+            <JoonMessage1 />
+            <JoonMessage2 />
+            <JoonMessage3 />
+          </div>
+        </div>
       </div>
 
       <div className="top-50 second-page fixed left-0 h-screen w-full overflow-hidden">

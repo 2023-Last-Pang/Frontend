@@ -49,9 +49,6 @@
   white-space: pre-wrap;
 }
 
-a {
-  padding-top: 70px;
-}
 a span {
   position: absolute;
   z-index: 3;

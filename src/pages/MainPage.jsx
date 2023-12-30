@@ -9,6 +9,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa6';
+import { MdLogout } from 'react-icons/md';
 import AuthenticationModal from '../components/Authentication/AuthenticationModal';
 import MessageBtn from '../components/Message/MessageBtn';
 import MessageModal from '../components/Message/MessageModal';
@@ -68,15 +69,16 @@ function MainPage() {
     const toggleScroll = (isModalOpen) => {
       document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
     };
+    document.body.style.overflowX = 'hidden';
 
     // 모달 상태 변경 감지
-    toggleScroll(openAuthenticationModal || showMessageModal || openMessage);
+    toggleScroll(openAuthenticationModal);
 
     // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openAuthenticationModal, showMessageModal, openMessage]);
+  }, [openAuthenticationModal]);
 
   // Date 객체 시간
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -189,6 +191,12 @@ function MainPage() {
     setShowMessageModal(true); // 메시지 모달 열기
   };
 
+  const handleLogoutClick = () => {
+    localStorage.clear();
+    alert('로그아웃되었습니다');
+    window.location.reload();
+  };
+
   const addMessage = (msgContent) => {
     const newMessage = {
       createdAt: Date.now(), // 현재 시간을 기반으로 한 고유 ID 생성
@@ -284,8 +292,14 @@ function MainPage() {
         )}
 
         {hasToken && (
-          <div className="flex justify-end">
-            <p className="p-5 text-white">{AuthRole}</p>
+          <div className="flex justify-end text-lg">
+            <p className="flex p-5 text-white">
+              {AuthRole}
+              <MdLogout
+                className="mt-1 ml-5 cursor-pointer"
+                onClick={handleLogoutClick}
+              />
+            </p>
           </div>
         )}
 

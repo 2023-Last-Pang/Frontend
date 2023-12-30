@@ -59,17 +59,15 @@ export default function InputAuth({ handleOpenAuthentication, color }) {
       <div className="flex justify-end mt-8">
         <button
           type="button"
-          className={`px-4 h-8 py-1 mr-3 text-sm text-[${color}] bg-white rounded hover:bg-[#e7e7e7] shadow-md`}
-          onClick={() => handleOpenAuthentication()}
-        >
+          className={`mr-3 h-8 px-4 py-1 text-sm text-[${color}] rounded bg-white shadow-md hover:bg-[#e7e7e7]`}
+          onClick={() => handleOpenAuthentication()}>
           취소
         </button>
 
         <button
           type="submit"
-          className={`px-4 h-8 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
-          onClick={() => handleSubmit()}
-        >
+          className={`h-8 px-4 py-1 text-sm text-white bg-[${color}] rounded hover:bg-[${color}] shadow-md`}
+          onClick={() => handleSubmit()}>
           완료
         </button>
       </div>

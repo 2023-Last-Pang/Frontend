@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
@@ -26,6 +27,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+import Footer from '../components/Footer';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -441,6 +443,9 @@ function MainPage() {
       </a>
 
       <GalleryPage />
+
+      {/* Footer */}
+      <Footer />
 
       {openAuthenticationModal && (
         <AuthenticationModal

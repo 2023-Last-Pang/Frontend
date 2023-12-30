@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 // prettier-ignore
 // 이미지 import
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import gallery1 from '../../public/img/April/gallery1.jpg';
 import gallery2 from '../../public/img/Ideaton/gallery2.jpg';
@@ -67,7 +67,6 @@ const galleryData = [
       아이디어톤_1,
       아이디어톤_2,
       아이디어톤_3,
-      아이디어톤_3,
       아이디어톤_4,
       아이디어톤_5,
       아이디어톤_6,
@@ -114,23 +113,14 @@ export default function GalleryPage() {
     setModalIsOpen(!modalIsOpen);
   };
 
-  useEffect(() => {
-    const toggleScroll = (isModalOpen) => {
-      document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
-    };
-
-    // 모달 상태 변경 감지
-    toggleScroll(modalIsOpen);
-
-    // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [modalIsOpen]);
-
   return (
-    <div className="flex items-center justify-center h-screen p-6">
-      <div className="grid grid-cols-3 grid-rows-2 gap-6">
+    <div className="flex h-screen flex-col items-center justify-center bg-[#EEF0F4]">
+      {/* 제목 */}
+      <div className="mb-6 text-4xl font-omyu_pretty">
+        <span>{'< 2023 테커 갤러리 >'}</span>
+      </div>
+
+      <div className="grid grid-cols-3 grid-rows-2 gap-6 p-6">
         {galleryData.map((gallery, index) => (
           <div
             key={index}

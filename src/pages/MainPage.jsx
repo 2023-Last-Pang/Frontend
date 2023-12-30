@@ -78,6 +78,10 @@ function MainPage() {
     };
   }, [openAuthenticationModal, showMessageModal, openMessage]);
 
+
+  // Date 객체 시간
+  // const [currentTime, setCurrentTime] = useState(new Date());
+
   // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
   const clientTime = new Date();
 
@@ -87,12 +91,15 @@ function MainPage() {
 
   const [currentTime, setCurrentTime] = useState(krCurr);
 
+
   // 배경색 상태
+  // eslint-disable-next-line no-unused-vars
   const [backgroundColor, setBackgroundColor] = useState();
 
   // 배경색을 시간에 따라 변경하는 함수
   const updateBackgroundColor = () => {
     const hour = currentTime.getHours();
+    // eslint-disable-next-line no-unused-vars
     const minute = currentTime.getMinutes();
     let background;
 
@@ -291,6 +298,7 @@ function MainPage() {
 
   return (
     <>
+
       <div className="first-page bg-linear-gradient , [#193D60]) relative h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
@@ -321,13 +329,14 @@ function MainPage() {
           />
         )}
         {!hasToken && (
-          <div className="flex items-center justify-center p-5">
+          <div className="font-omyu_pretty flex items-center justify-center p-5">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style"
+              className="link-style font-omyu_pretty"
+
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -335,7 +344,7 @@ function MainPage() {
         )}
 
         {hasToken && (
-          <div className="flex justify-end">
+          <div className="flex justify-end ">
             <p className="p-5 text-white">{AuthRole}</p>
           </div>
         )}

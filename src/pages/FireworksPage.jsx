@@ -72,9 +72,22 @@ class Particle {
 
     this.velocityY += Particle.GRAVITY / 1000;
 
+    // if (this.currentDuration >= this.duration) {
+    //   // this.velocityX -= this.velocityX / this.dampening;
+    //   // this.velocityY -= this.velocityY / this.dampening;
+    //   this.velocityX *= 0.99; // 임의의 값으로 변경
+    //   this.velocityY *= 0.99;
+    // }
+
     if (this.currentDuration >= this.duration) {
-      this.velocityX -= this.velocityX / this.dampening;
-      this.velocityY -= this.velocityY / this.dampening;
+      // this.velocityX -= this.velocityX / this.dampening;
+      // this.velocityY -= this.velocityY / this.dampening;
+
+      const slowdown = 0.99; // 감속도 조절을 위한 값, 0.99는 임의의 값입니다. 원하는 비율로 조정 가능합니다.
+
+      // 감속 적용
+      this.velocityX *= slowdown;
+      this.velocityY *= slowdown;
     }
 
     if (this.currentDuration >= this.duration + this.duration / 1.1) {
@@ -213,14 +226,20 @@ function Fireworks() {
     );
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = '/'; // 10초 뒤에 '/'로 이동
+    }, 12000); // 12초를 밀리초로 계산
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         position: 'relative',
-      }}
-    >
+      }}>
       <canvas ref={canvasRef} onClick={handleClick} />
     </div>
   );

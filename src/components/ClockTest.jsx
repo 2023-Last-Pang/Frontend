@@ -83,7 +83,7 @@ function ClockTest() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
+    eventSource = new EventSource('https://lastpang-backend.fly.dev/api/v1/sse/time');
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);

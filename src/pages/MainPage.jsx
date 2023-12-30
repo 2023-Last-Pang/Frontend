@@ -160,9 +160,7 @@ function MainPage() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
-    );
+    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);

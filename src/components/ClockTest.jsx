@@ -45,15 +45,15 @@ function ClockTest() {
     const countSeconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     // 현재 시간
-    const days = now.date();
+    // const days = now.date();
     const hours = now.hours();
     const minutes = now.minutes();
     const seconds = now.seconds();
 
     setTimeDifference(
-      `${days} / ${padWithZero(hours)} : ${padWithZero(
-        minutes,
-      )} : ${padWithZero(seconds)}`,
+      `${padWithZero(hours)} : ${padWithZero(minutes)} : ${padWithZero(
+        seconds,
+      )}`,
     );
 
     if (
@@ -100,6 +100,7 @@ function ClockTest() {
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
+      console.log(`서버 시간: ${moment(serverTime).tz('Asia/Seoul')}`);
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();

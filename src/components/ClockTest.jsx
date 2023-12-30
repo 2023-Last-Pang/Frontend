@@ -112,7 +112,7 @@ function ClockTest() {
       const timeGap = serverTime - clientTime.getTime();
       console.log(timeGap);
 
-      setCurrentTime(moment(serverTime + timeGap + 300).tz('Asia/Seoul'));
+      setCurrentTime(moment(serverTime + timeGap + 99).tz('Asia/Seoul');
 
       if (intervalTime) {
         clearInterval(intervalTime);

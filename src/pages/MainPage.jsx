@@ -14,6 +14,8 @@ import moonSample from '../assets/img/moon.svg';
 import ClockTest from '../components/ClockTest';
 import apiV1Instance from '../apiV1Instance';
 import GalleryTest from './GalleryTest';
+import moment from 'moment';
+import 'moment-timezone';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -30,7 +32,7 @@ function MainPage() {
   const getMessageAPI = async () => {
     try {
       const response = await apiV1Instance.get('/messages');
-      const fetchedMessages = response.data.data.map(msg => ({
+      const fetchedMessages = response.data.data.map((msg) => ({
         ...msg,
         x: Math.random() * 100, // 랜덤 x 위치
         y: Math.random() * 50, // 랜덤 y 위치
@@ -46,7 +48,7 @@ function MainPage() {
     setHasToken(!!token);
     if (token) {
       getMessageAPI();
-      
+
       const role = localStorage.getItem('role');
       if (role === techeerRole) {
         setAuthRole('테커인');
@@ -68,10 +70,16 @@ function MainPage() {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openAuthenticationModal, showMessageModal, openMessage])
-  
-  // Date 객체 시간
-  const [currentTime, setCurrentTime] = useState(new Date());
+  }, [openAuthenticationModal, showMessageModal, openMessage]);
+
+  // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  const clientTime = new Date();
+
+  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+
+  const [currentTime, setCurrentTime] = useState(krCurr);
 
   // 배경색 상태
   const [backgroundColor, setBackgroundColor] = useState();
@@ -126,43 +134,91 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
-  // 마운트 시 실행됨
-  useEffect(() => {
-    // SSE 시간을 받아오는 함수
-    const fetchTime = () => {
-      const eventSource = new EventSource(
-        'http://localhost:8000/api/v1/sse/time',
-      );
+  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  let intervalTime = null;
 
-      eventSource.onmessage = (e) => {
-        const serverTime = JSON.parse(e.data);
-        console.log(serverTime.unixTime); // 배포 시 삭제
-        setCurrentTime(new Date(serverTime.unixTime * 1000));
-      };
+  // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
+  const fetchServerTime = () => {
+    if (eventSource) {
+      eventSource.close(); // 기존 연결이 있다면 닫기
+    }
 
-      eventSource.onerror = (e) => {
-        eventSource.close();
+    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
 
-        if (e.error) {
-          // 에러 발생 시 할 일
-        }
+    eventSource.onmessage = (e) => {
+      const serverTime = moment(JSON.parse(e.data).unixTime);
 
-        if (e.target.readyState === EventSource.CLOSED) {
-          // 종료 시 할 일
-        }
-      };
+      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+      const clientTime = new Date();
+      const clientUnixTime = new Date().getTime();
+
+      const utc =
+        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+      const timeGap = serverTime - clientUnixTime;
+      console.log(timeGap);
+
+      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+
+      intervalTime = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          // prevTime을 밀리초 단위로 변환
+          const prevTimeMillis = prevTime.getTime();
+
+          // 1초 (1000 밀리초)와 timeGap을 더함
+          const newTimeMillis = prevTimeMillis + 1000;
+
+          // moment를 사용하여 한국 시간대의 Date 객체로 변환
+          return moment(newTimeMillis).toDate();
+        });
+      }, 1000);
     };
 
-    fetchTime();
+    eventSource.onerror = (e) => {
+      eventSource.close();
+      // 에러 처리 로직
+    };
+  };
 
-    updateBackgroundColor(); // 컴포넌트 마운트 시 배경색 업데이트
+  useEffect(() => {
+    fetchServerTime();
 
-    const timer = setInterval(() => {
-      const newTime = new Date();
-      setCurrentTime(newTime);
-    }, 60000); // 1분마다 시간 업데이트
+    // 매초 시간 업데이트
+    intervalTime = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        const prevTimeMillis = prevTime.getTime();
+        const newTimeMillis = prevTimeMillis + 1000;
 
-    return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
+        return moment(newTimeMillis).toDate();
+      });
+    }, 1000);
+
+    // 매 5초마다 서버 시간 업데이트
+    // const serverTimeUpdateInterval = setInterval(() => {
+    //   fetchServerTime();
+    // }, 5000);
+
+    // 탭 활성화 감지
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchServerTime();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 정리
+    return () => {
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+      // clearInterval(serverTimeUpdateInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // 1초마다 실행됨
@@ -229,7 +285,7 @@ function MainPage() {
 
   return (
     <>
-      <div className="first-page bg-linear-gradient from-bottomColor to-topColor , [#193D60]) h-screen w-full bg-gradient-to-t overflow-hidden">
+      <div className="first-page bg-linear-gradient , [#193D60]) h-screen w-full overflow-hidden bg-gradient-to-t from-bottomColor to-topColor">
         {/* 해 이미지 */}
         {currentTime.getHours() >= 6 && currentTime.getHours() < 18 && (
           <img
@@ -267,8 +323,7 @@ function MainPage() {
             <button
               type="button"
               className="link-style"
-              onClick={() => handleOpenAuthentication()}
-            >
+              onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
           </div>
@@ -279,7 +334,7 @@ function MainPage() {
             <p className="p-5 text-white">{AuthRole}</p>
           </div>
         )}
-        
+
         {/* 테스트용 시간 조절 버튼 */}
         {/* <div>
           <button
@@ -302,7 +357,9 @@ function MainPage() {
           messages.map((msg, index) => (
             <div
               key={msg.createdAt}
-              className={`absolute text-white cursor-pointer  ${msg.isNew ? 'new-message' : 'star'}`}
+              className={`absolute cursor-pointer text-white  ${
+                msg.isNew ? 'new-message' : 'star'
+              }`}
               style={{
                 left: `${msg.x}%`,
                 top: `${msg.y}%`,
@@ -310,7 +367,7 @@ function MainPage() {
               }}
               onClick={() => handleMsgClick(msg)} // 메시지 클릭 핸들러
             />
-        ))}
+          ))}
 
         {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
         {openMessage && hasToken && (
@@ -321,8 +378,8 @@ function MainPage() {
         )}
       </div>
 
-      <div className='fixed left-0 w-full h-screen overflow-hidden top-50 second-page'>
-        <GalleryTest/>
+      <div className="top-50 second-page fixed left-0 h-screen w-full overflow-hidden">
+        <GalleryTest />
       </div>
 
       {openAuthenticationModal && (

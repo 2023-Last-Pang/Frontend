@@ -45,15 +45,15 @@ function ClockTest() {
     const countSeconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     // 현재 시간
-    // const days = now.getDate();
+    const days = now.date();
     const hours = now.hours();
     const minutes = now.minutes();
     const seconds = now.seconds();
 
     setTimeDifference(
-      `${padWithZero(hours)} : ${padWithZero(minutes)} : ${padWithZero(
-        seconds,
-      )}`,
+      `${days} / ${padWithZero(hours)} : ${padWithZero(
+        minutes,
+      )} : ${padWithZero(seconds)}`,
     );
 
     if (
@@ -94,7 +94,9 @@ function ClockTest() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource('https://lastpang-backend.fly.dev/api/v1/sse/time');
+    eventSource = new EventSource(
+      'https://lastpang-backend.fly.dev/api/v1/sse/time',
+    );
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);

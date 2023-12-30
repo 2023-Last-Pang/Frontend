@@ -179,6 +179,7 @@ function ClockTest() {
 
   useEffect(() => {
     if (currentTime) {
+      console.log(`현재 시간: ${currentTime}`);
       calculateTimeDifference();
     }
   }, [currentTime]);

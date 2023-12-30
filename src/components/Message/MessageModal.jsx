@@ -36,8 +36,8 @@ export default function MessageModal({
   }
 
   return (
-    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center">
-      <div className="w-84 mt-[30rem] flex h-80 flex-col justify-center bg-message-image bg-cover">
+    <div className="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-full">
+      <div className="w-84 mt-[32rem] flex h-80 flex-col justify-center bg-message-image bg-cover">
         {role === techeerRole && (
           <RetryAuth handleOpenMessage={handleOpenMessage} color="#e26a68" />
         )}

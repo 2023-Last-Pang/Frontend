@@ -51,8 +51,7 @@ function MainPage() {
       }));
       setMessages(fetchedMessages);
     } catch (error) {
-      console.log(error);
-      if (error.response.data.statusCode === 401) {
+      if (error.response.status === 401) {
         alert('세션이 만료되었습니다. 다시 로그인해주세요!');
         localStorage.clear();
         window.location.reload();
@@ -424,10 +423,11 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
+
         <div className="">
           <img
             src={snowfield}
-            className="absolute bottom-0 w-full"
+            className="absolute bottom-0 z-0 w-full"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">

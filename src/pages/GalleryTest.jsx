@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 이미지 import
 import gallery1 from '../../public/img/April/gallery1.jpg';
@@ -35,10 +35,21 @@ const galleryData = [
 
 function GalleryTest() {
   const [activeSlider, setActiveSlider] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleImageClick = (slider) => {
     setActiveSlider((prevSlider) => (prevSlider === slider ? null : slider));
+    window.scrollTo(0, 0);
+    setIsModalOpen(!isModalOpen);
   };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isModalOpen]);
 
   return (
     <div className="bg-[rgba(255, 255, 255, 0.6)] overflow-hidden">

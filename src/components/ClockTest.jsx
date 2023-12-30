@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import useCountdown from '@bradgarropy/use-countdown';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
+import moment from 'moment';
+import 'moment-timezone';
 
 function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
@@ -15,14 +17,23 @@ function ClockTest() {
   const [complete, setComplete] = useState(false);
   // const navigate = useNavigate();
 
+  // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  const clientTime = new Date();
+
+  const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const krCurr = moment(utc + KR_TIME_DIFF).toDate();
+
+  const [currentTime, setCurrentTime] = useState(krCurr);
+
   // 숫자가 한자리 수일때 앞에 0을 붙여줌
   const padWithZero = (number) => {
     return number < 10 ? `0${number}` : number;
   };
 
   const calculateTimeDifference = () => {
-    const now = new Date();
-    const newYear = new Date('December 20, 2023 17:00:10');
+    const now = currentTime;
+    const newYear = new Date('January 1, 2024 00:00:00');
     const diff = newYear - now;
 
     // D-DAY 시간
@@ -63,22 +74,109 @@ function ClockTest() {
     countdown.resume();
   }
 
-  const interval = setInterval(calculateTimeDifference, 1000);
+  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  let intervalTime = null;
+
+  // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
+  const fetchServerTime = () => {
+    if (eventSource) {
+      eventSource.close(); // 기존 연결이 있다면 닫기
+    }
+
+    eventSource = new EventSource('http://localhost:8000/api/v1/sse/time');
+
+    eventSource.onmessage = (e) => {
+      const serverTime = moment(JSON.parse(e.data).unixTime);
+
+      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+      const clientTime = new Date();
+      const clientUnixTime = new Date().getTime();
+
+      const utc =
+        clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+      const timeGap = serverTime - clientUnixTime;
+      console.log(timeGap);
+
+      setCurrentTime(moment(utc + KR_TIME_DIFF + timeGap).toDate());
+
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+
+      intervalTime = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          // prevTime을 밀리초 단위로 변환
+          const prevTimeMillis = prevTime.getTime();
+
+          // 1초 (1000 밀리초)와 timeGap을 더함
+          const newTimeMillis = prevTimeMillis + 1000;
+
+          // moment를 사용하여 한국 시간대의 Date 객체로 변환
+          return moment(newTimeMillis).toDate();
+        });
+      }, 1000);
+    };
+
+    eventSource.onerror = (e) => {
+      eventSource.close();
+      // 에러 처리 로직
+    };
+  };
 
   useEffect(() => {
-    return () => clearInterval(interval);
+    fetchServerTime();
+
+    // 매초 시간 업데이트
+    intervalTime = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        const prevTimeMillis = prevTime.getTime();
+        const newTimeMillis = prevTimeMillis + 1000;
+
+        return moment(newTimeMillis).toDate();
+      });
+    }, 1000);
+
+    // 매 5초마다 서버 시간 업데이트
+    // const serverTimeUpdateInterval = setInterval(() => {
+    //   fetchServerTime();
+    // }, 5000);
+
+    // 탭 활성화 감지
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchServerTime();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 정리
+    return () => {
+      if (intervalTime) {
+        clearInterval(intervalTime);
+      }
+      // clearInterval(serverTimeUpdateInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
+  useEffect(() => {
+    if (currentTime) {
+      calculateTimeDifference();
+    }
+  }, [currentTime]);
+
   return (
-    <div className="flex h-screen w-screen">
+    <>
       {/* 카운트다운 */}
       {startCountDown != true && (
-        <motion.span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text font-Taebaek text-8xl tracking-[9px] text-transparent">
+        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
           {timeDifference}
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{
@@ -88,14 +186,12 @@ function ClockTest() {
               scale: 1.2 + 3 / countdown.seconds,
             }}
             key={countdown.seconds}
-            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent"
-          >
+            className="bg-gradient-to-tr from-[#EEF1F0] to-[#71757E] bg-clip-text text-center font-Wanju text-[200px] text-transparent">
             {countdown.seconds}
           </motion.span>
         </div>
       )}
-      {complete && <Confetti className="h-full w-full" />}
-    </div>
+    </>
   );
 }
 

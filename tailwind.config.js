@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ['./src/**/*.{html,js,jsx}'],
   theme: {
@@ -8,7 +9,7 @@ export default {
         bottomColor: '#2C5B83',
       },
       backgroundImage: {
-        'message-image': "url('./src/assets/images/messageModal.png')",
+        'message-image': "url('./assets/images/messageModal.png')",
       },
       fontFamily: {
         PartialSans: ['PartialSansKR-Regular'],

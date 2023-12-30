@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -8,4 +9,9 @@ export default defineConfig({
     host: '0.0.0.0',
   },
   publicDir: 'src/public',
+  overrides: {
+    vite: {
+      rollup: 'npm:@rollup/wasm-node',
+    },
+  },
 });

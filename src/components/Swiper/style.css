@@ -64,10 +64,12 @@ body {
 
 .swiper-button-prev {
   left: 2rem;
+  margin-left: 2rem;
 }
 
 .swiper-button-next {
   right: 2rem;
+  margin-right: 2rem;
 }
 
 .swiper-button-prev:after,
@@ -85,7 +87,7 @@ body {
 .swiper-pagination-bullet {
   width: 8px;
   height: 8px;
-  display: none;
+  display: outside;
   border-radius: 50%;
   background: #000;
   opacity: 0.2;

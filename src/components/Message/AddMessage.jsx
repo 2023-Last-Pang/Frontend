@@ -30,7 +30,6 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
         });
     } catch (error) {
       alert(error.response.data.errors[0].constraints.maxLength);
-      console.log(error.response.data.errors[0].constraints.maxLength);
     }
   };
 

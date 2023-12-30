@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unreachable */
 /* eslint-disable react/no-unknown-property */
@@ -10,6 +11,7 @@ import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 import moment from 'moment';
 import 'moment-timezone';
+import apiV1Instance from '../apiV1Instance';
 
 function ClockTest() {
   const [timeDifference, setTimeDifference] = useState('');
@@ -94,9 +96,7 @@ function ClockTest() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
-    );
+    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
@@ -193,7 +193,7 @@ function ClockTest() {
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{

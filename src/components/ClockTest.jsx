@@ -35,7 +35,8 @@ function ClockTest() {
 
   const calculateTimeDifference = () => {
     const now = currentTime;
-    const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
+    // const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
+    const newYear = moment('2023-12-31 05:40:00').tz('Asia/Seoul');
     const diff = newYear - now;
 
     // D-DAY 시간
@@ -202,7 +203,7 @@ function ClockTest() {
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{

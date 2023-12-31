@@ -40,6 +40,8 @@ function MainPage() {
   const [hasToken, setHasToken] = useState(false);
   const [AuthRole, setAuthRole] = useState('');
 
+  const [viewMessageModal, setViewMessageModal] = useState(false);
+
   const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
   const joonRole = import.meta.env.VITE_JOON_ROLE;
 
@@ -455,7 +457,9 @@ function MainPage() {
             </div>
           ))}
 
-        {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
+        {hasToken && !viewMessageModal && (
+          <MessageBtn handleOpenMessage={handleOpenMessage} />
+        )}
         {openMessage && hasToken && (
           <MessageModal
             handleOpenMessage={handleOpenMessage}
@@ -463,7 +467,7 @@ function MainPage() {
           />
         )}
 
-        <div className="">
+        <div>
           <img
             src={snowfield}
             className="absolute bottom-0 z-0 w-full"
@@ -499,7 +503,7 @@ function MainPage() {
         />
       )}
 
-      <ClockTest />
+      <ClockTest setViewMessageModal={setViewMessageModal} />
 
       {showAndrew && (
         <img

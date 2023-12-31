@@ -16,7 +16,7 @@ function JoonMessage1() {
   };
 
   return (
-    <div className="fixed bottom-0 left-[15%] flex -translate-x-1/2 transform flex-col items-center">
+    <div className="absolute bottom-0 left-[15%] flex -translate-x-1/2 transform flex-col items-center">
       <div
         role="button"
         tabIndex={0}

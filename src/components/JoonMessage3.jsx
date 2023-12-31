@@ -15,12 +15,12 @@ function JoonMessage3() {
     }, 2000);
   };
   return (
-    <div className="fixed bottom-10 left-[90%] flex -translate-x-1/2 transform flex-col items-center">
+    <div className="absolute bottom-10 left-[90%] flex -translate-x-1/2 transform flex-col items-center">
       <div
         role="button"
         tabIndex={0}
         onClick={handleImageClick}
-        className="w-[20vw] cursor-pointer">
+        className="cursor-pointer">
         <img
           src={snowman4}
           alt="Snowman"
@@ -32,11 +32,11 @@ function JoonMessage3() {
             <img
               src={message2}
               alt="Message"
-              className="h-full w-full object-cover"
+              className="object-cover w-full h-full"
             />
             <div className="absolute right-[5.8rem] top-[2rem] flex w-[9vw] -translate-x-[2%] -translate-y-[0.2%] transform flex-col items-center md:w-[9vw]">
-              <div className="flex w-full flex-col items-center justify-center text-center font-omyu_pretty text-base">
-                <p className=" text-black">
+              <div className="flex flex-col items-center justify-center w-full text-base text-center font-omyu_pretty">
+                <p className="text-black ">
                   24년에도 재밌는 추억 많이 쌓으면서 코딩해요!!😊 - 수현 -
                 </p>
               </div>

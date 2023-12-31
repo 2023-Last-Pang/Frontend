@@ -9,9 +9,9 @@ export default function Footer() {
         <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 sm:mt-0">
           <li>
             <a
-              href="https://team-joon.oopy.io/"
+              href="https://www.team-joon.com"
               className="me-4 hover:underline md:me-6">
-              About
+              About Us
             </a>
           </li>
           <li>

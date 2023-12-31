@@ -13,7 +13,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import apiV1Instance from '../apiV1Instance';
 
-function ClockTest() {
+function ClockTest({ setViewMessageModal }) {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -65,6 +65,7 @@ function ClockTest() {
       countSeconds <= 10
     ) {
       setStartCountDown(true);
+      setViewMessageModal(true);
     }
 
     // 0초가 되면 '/' 페이지로 이동

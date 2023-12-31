@@ -357,7 +357,7 @@ function MainPage() {
             </p>
             <button
               type="button"
-              className="link-style z-10 font-omyu_pretty text-blue-900"
+              className="link-style z-10 font-omyu_pretty text-blue-950"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>

@@ -127,7 +127,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactCanvasConfetti from 'react-canvas-confetti';
 import newYearBg from '../assets/images/newyearbg2.png';
-import joonAudio from '../assets/audio/joon_newyear.mp3';
 
 const canvasStyles = {
   position: 'fixed',
@@ -197,41 +196,8 @@ export default function NewyearPage(callback, deps) {
     };
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때 한 번만 실행되도록 설정
 
-  const myRef = useRef(null);
-  const [play, setPlay] = useState(false);
-  // 재생
-  const handleScreenClick = () => {
-    // 오디오 재생
-    if (myRef.current && !play) {
-      myRef.current.play();
-      setPlay(true);
-
-      // 4초 후에 정지
-      setTimeout(() => {
-        if (myRef.current) {
-          myRef.current.pause();
-          setPlay(false);
-        }
-      }, 4000);
-    }
-  };
-
-  useEffect(() => {
-    if (!myRef.current) return;
-    if (play) {
-      myRef.current.play();
-    }
-  }, []);
-
   return (
-    <div onClick={handleScreenClick} className="w-screen h-screen">
-      <audio
-        ref={myRef}
-        src={joonAudio}
-        controls
-        loop
-        style={{ display: 'none' }}
-      />
+    <div className="w-screen h-screen">
       <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
     </div>
   );

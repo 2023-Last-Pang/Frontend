@@ -35,8 +35,7 @@ function ClockTest({ setViewMessageModal }) {
 
   const calculateTimeDifference = () => {
     const now = currentTime;
-    // const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
-    const newYear = moment('2023-12-31 21:25:00').tz('Asia/Seoul');
+    const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
     const diff = newYear - now;
 
     // D-DAY 시간
@@ -102,7 +101,6 @@ function ClockTest({ setViewMessageModal }) {
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
-      console.log(`서버 시간: ${moment(serverTime).tz('Asia/Seoul')}`);
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();
@@ -112,7 +110,6 @@ function ClockTest({ setViewMessageModal }) {
       // const krCurr = moment().tz('Asia/Seoul');
 
       const timeGap = serverTime - clientTime.getTime();
-      console.log(timeGap);
 
       setCurrentTime(moment(serverTime + timeGap + 99).tz('Asia/Seoul'));
 
@@ -190,7 +187,6 @@ function ClockTest({ setViewMessageModal }) {
 
   useEffect(() => {
     if (currentTime) {
-      console.log(`현재 시간: ${currentTime}`);
       calculateTimeDifference();
     }
   }, [currentTime]);

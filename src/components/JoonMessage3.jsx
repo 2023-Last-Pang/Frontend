@@ -12,7 +12,7 @@ function JoonMessage3() {
 
     setTimeout(() => {
       setIsClicked(false);
-    }, 2000);
+    }, 3000);
   };
   return (
     <div className="absolute bottom-10 left-[90%] flex -translate-x-1/2 transform flex-col items-center">
@@ -21,14 +21,9 @@ function JoonMessage3() {
         tabIndex={0}
         onClick={handleImageClick}
         className="cursor-pointer">
-        <img
-          src={snowman4}
-          alt="Snowman"
-          className="h-auto w-[45%]"
-          draggable="false"
-        />
+        <img src={snowman4} alt="Snowman" className="h-auto w-full" draggable="false"/>
         {isClicked && (
-          <div className="absolute right-[7.5rem] top-[-7rem] z-20 flex aspect-video h-auto w-[22vw] md:w-[22vw]">
+          <div className="absolute right-0 top-[-7rem] z-20 flex aspect-video h-auto w-[22vw] md:w-[22vw]">
             <img
               src={message2}
               alt="Message"

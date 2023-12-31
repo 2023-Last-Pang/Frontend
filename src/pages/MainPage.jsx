@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -28,6 +29,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+
 import andrew from '../assets/images/andrew.png';
 import Footer from '../components/Footer';
 
@@ -62,6 +64,40 @@ function MainPage() {
       }
     }
   };
+
+  function isBrowserCheck() {
+    const agt = navigator.userAgent.toLowerCase();
+    if (agt.indexOf('chrome') !== -1) return 'Chrome';
+    if (agt.indexOf('opera') !== -1) return 'Opera';
+    if (agt.indexOf('staroffice') !== -1) return 'Star Office';
+    if (agt.indexOf('webtv') !== -1) return 'WebTV';
+    if (agt.indexOf('beonex') !== -1) return 'Beonex';
+    if (agt.indexOf('chimera') !== -1) return 'Chimera';
+    if (agt.indexOf('netpositive') !== -1) return 'NetPositive';
+    if (agt.indexOf('phoenix') !== -1) return 'Phoenix';
+    if (agt.indexOf('firefox') !== -1) return 'Firefox';
+    if (agt.indexOf('safari') !== -1) return 'Safari';
+    if (agt.indexOf('skipstone') !== -1) return 'SkipStone';
+    if (agt.indexOf('netscape') !== -1) return 'Netscape';
+    if (agt.indexOf('mozilla/5.0') !== -1) return 'Mozilla';
+    if (agt.indexOf('msie') !== -1) {
+      let rv = -1;
+      if (navigator.appName === 'Microsoft Internet Explorer') {
+        const ua = navigator.userAgent;
+        const re = new RegExp('MSIE ([0-9]{1,}[.0-9]{0,})');
+        if (re.exec(ua) != null) rv = parseFloat(RegExp.$1);
+      }
+      return 'Internet Explorer ' + rv;
+    }
+  }
+
+  useEffect(() => {
+    const browser = isBrowserCheck();
+    console.log(browser);
+    if (browser !== 'Chrome') {
+      alert('크롬 브라우저를 이용해주세요!');
+    }
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -337,10 +373,10 @@ function MainPage() {
   };
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="relative w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="relative w-full h-screen first-page">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -351,6 +387,7 @@ function MainPage() {
               top: sunPosition.top,
               width: '200px',
               transform: 'translate(-50%, -50%)',
+              zIndex: 10,
             }}
             onClick={() => handleMoonClick('sun')}
             alt="Sun"
@@ -368,6 +405,7 @@ function MainPage() {
               width: '180px',
               transform: 'translate(-50%, -50%)',
               cursor: 'pointer',
+              zIndex: 10,
             }}
             onClick={() => handleMoonClick('moon')}
             alt="Moon"
@@ -382,7 +420,7 @@ function MainPage() {
             </p>
             <button
               type="button"
-              className="z-10 text-blue-700 link-style font-omyu_pretty"
+              className="z-20 text-blue-700 link-style font-omyu_pretty"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -467,10 +505,10 @@ function MainPage() {
           />
         )}
 
-        <div>
+        <div className="absolute bottom-0 left-0 right-0">
           <img
             src={snowfield}
-            className="absolute bottom-0 z-0 w-full"
+            className="object-cover w-full h-auto"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -520,7 +558,7 @@ function MainPage() {
           alt="Andrew"
         />
       )}
-    </>
+    </div>
   );
 }
 

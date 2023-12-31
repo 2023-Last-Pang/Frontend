@@ -1,3 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
@@ -9,7 +15,7 @@
 // function NewyearPage() {
 //   const { width, height } = useWindowSize();
 //   return (
-//     <div className="h-full w-screen bg-black text-white">
+//     <div className="w-screen h-full text-white bg-black">
 //       ㄴㅇㄹㄴ
 //       <div className="bg-black">
 //         <Confetti
@@ -144,7 +150,7 @@ function getAnimationSettings(angle, originX) {
   };
 }
 
-export default function SchoolPride() {
+export default function NewyearPage(callback, deps) {
   const refAnimationInstance = useRef(null);
   const [intervalId, setIntervalId] = useState();
 
@@ -184,14 +190,15 @@ export default function SchoolPride() {
 
   useEffect(() => {
     startAnimation(); // 페이지에 처음 접속했을 때 애니메이션 자동 시작
+    // playJoonAudio(); //  페이지에 처음 접속했을 때 음성메세지 자동 시작
     return () => {
       clearInterval(intervalId);
     };
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때 한 번만 실행되도록 설정
+
   return (
-    <>
-      <div className="text-white">sdfsdf</div>
+    <div className="w-screen h-screen">
       <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
-    </>
+    </div>
   );
 }

@@ -1,3 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
@@ -9,7 +15,7 @@
 // function NewyearPage() {
 //   const { width, height } = useWindowSize();
 //   return (
-//     <div className="h-full w-screen bg-black text-white">
+//     <div className="w-screen h-full text-white bg-black">
 //       ㄴㅇㄹㄴ
 //       <div className="bg-black">
 //         <Confetti
@@ -121,6 +127,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactCanvasConfetti from 'react-canvas-confetti';
 import newYearBg from '../assets/images/newyearbg2.png';
+import joonAudio from '../assets/audio/joon_newyear.mp3';
 
 const canvasStyles = {
   position: 'fixed',
@@ -144,7 +151,7 @@ function getAnimationSettings(angle, originX) {
   };
 }
 
-export default function SchoolPride(callback, deps) {
+export default function NewyearPage(callback, deps) {
   const refAnimationInstance = useRef(null);
   const [intervalId, setIntervalId] = useState();
 
@@ -165,12 +172,6 @@ export default function SchoolPride(callback, deps) {
     }
   }, [nextTickAnimation, intervalId]);
 
-  const playJoonAudio = useCallback(() => {
-    console.log('playJoonAudio');
-    const audio = new Audio('/audio/joon.mp3');
-    audio.play();
-  }, []);
-
   // const pauseAnimation = useCallback(() => {
   //   clearInterval(intervalId);
   //   setIntervalId(null);
@@ -190,15 +191,48 @@ export default function SchoolPride(callback, deps) {
 
   useEffect(() => {
     startAnimation(); // 페이지에 처음 접속했을 때 애니메이션 자동 시작
-    playJoonAudio(); //  페이지에 처음 접속했을 때 음성메세지 자동 시작
+    // playJoonAudio(); //  페이지에 처음 접속했을 때 음성메세지 자동 시작
     return () => {
       clearInterval(intervalId);
     };
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때 한 번만 실행되도록 설정
+
+  const myRef = useRef(null);
+  const [play, setPlay] = useState(false);
+  // 재생
+  const handleScreenClick = () => {
+    // 오디오 재생
+    if (myRef.current && !play) {
+      myRef.current.play();
+      setPlay(true);
+
+      // 4초 후에 정지
+      setTimeout(() => {
+        if (myRef.current) {
+          myRef.current.pause();
+          setPlay(false);
+        }
+      }, 4000);
+    }
+  };
+
+  useEffect(() => {
+    if (!myRef.current) return;
+    if (play) {
+      myRef.current.play();
+    }
+  }, []);
+
   return (
-    <>
-      <div className="text-white">sdfsdf</div>
+    <div onClick={handleScreenClick} className="w-screen h-screen">
+      <audio
+        ref={myRef}
+        src={joonAudio}
+        controls
+        loop
+        style={{ display: 'none' }}
+      />
       <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
-    </>
+    </div>
   );
 }

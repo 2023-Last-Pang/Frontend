@@ -152,58 +152,58 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
-  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  // let eventSource = null; // EventSource 객체를 위한 전역 변수
   let intervalTime = null;
 
   // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
-  const fetchServerTime = () => {
-    if (eventSource) {
-      eventSource.close(); // 기존 연결이 있다면 닫기
-    }
+  // const fetchServerTime = () => {
+  //   if (eventSource) {
+  //     eventSource.close(); // 기존 연결이 있다면 닫기
+  //   }
 
-    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
+  //   eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
-    eventSource.onmessage = (e) => {
-      const serverTime = moment(JSON.parse(e.data).unixTime);
+  //   eventSource.onmessage = (e) => {
+  //     const serverTime = moment(JSON.parse(e.data).unixTime);
 
-      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
-      const clientTime = new Date();
+  //     // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  //     const clientTime = new Date();
 
-      // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-      // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-      // const krCurr = moment().tz('Asia/Seoul');
+  //     // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  //     // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  //     // const krCurr = moment().tz('Asia/Seoul');
 
-      const timeGap = serverTime - clientTime.getTime();
-      console.log(timeGap);
+  //     const timeGap = serverTime - clientTime.getTime();
+  //     console.log(timeGap);
 
-      setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
+  //     setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
 
-      if (intervalTime) {
-        clearInterval(intervalTime);
-      }
+  //     if (intervalTime) {
+  //       clearInterval(intervalTime);
+  //     }
 
-      intervalTime = setInterval(() => {
-        setCurrentTime((prevTime) => {
-          // prevTime을 밀리초 단위로 변환
-          const prevTimeMillis = prevTime.valueOf();
+  //     intervalTime = setInterval(() => {
+  //       setCurrentTime((prevTime) => {
+  //         // prevTime을 밀리초 단위로 변환
+  //         const prevTimeMillis = prevTime.valueOf();
 
-          // 1초 (1000 밀리초)와 timeGap을 더함
-          const newTimeMillis = prevTimeMillis + 1000;
+  //         // 1초 (1000 밀리초)와 timeGap을 더함
+  //         const newTimeMillis = prevTimeMillis + 1000;
 
-          // moment를 사용하여 한국 시간대의 Date 객체로 변환
-          return moment(newTimeMillis).tz('Asia/Seoul');
-        });
-      }, 1000);
-    };
+  //         // moment를 사용하여 한국 시간대의 Date 객체로 변환
+  //         return moment(newTimeMillis).tz('Asia/Seoul');
+  //       });
+  //     }, 1000);
+  //   };
 
-    eventSource.onerror = (e) => {
-      eventSource.close();
-      // 에러 처리 로직
-    };
-  };
+  //   eventSource.onerror = (e) => {
+  //     eventSource.close();
+  //     // 에러 처리 로직
+  //   };
+  // };
 
   useEffect(() => {
-    fetchServerTime();
+    // fetchServerTime();
 
     // 매초 시간 업데이트
     intervalTime = setInterval(() => {
@@ -225,26 +225,26 @@ function MainPage() {
     // }, 5000);
 
     // 탭 활성화 감지
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        if (eventSource) {
-          // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
-          eventSource.close();
-          fetchServerTime();
-        }
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // const handleVisibilityChange = () => {
+    //   if (document.visibilityState === 'visible') {
+    //     if (eventSource) {
+    //       // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
+    //       eventSource.close();
+    //       fetchServerTime();
+    //     }
+    //   }
+    // };
+    // document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // 정리
+    // // 정리
     return () => {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      if (eventSource) {
-        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
-      }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      // if (eventSource) {
+      //   eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      // }
+      // document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -351,12 +351,12 @@ function MainPage() {
         )}
         {!hasToken && (
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
-            <p className="mr-3 text-white font-omyu_pretty">
+            <p className="mr-3 font-omyu_pretty text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style font-omyu_pretty z-10"
+              className="link-style z-10 font-omyu_pretty"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -365,7 +365,7 @@ function MainPage() {
 
         {hasToken && (
           <div className="flex justify-end text-lg">
-            <p className="flex p-5 text-white font-omyu_pretty">
+            <p className="flex p-5 font-omyu_pretty text-white">
               {AuthRole}
               <MdLogout
                 className="ml-5 mt-1 cursor-pointer"

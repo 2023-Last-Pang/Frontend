@@ -29,6 +29,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+
 import andrew from '../assets/images/andrew.png';
 import Footer from '../components/Footer';
 
@@ -40,6 +41,8 @@ function MainPage() {
   const [showMessageModal, setShowMessageModal] = useState(false); // 메시지 모달 상태 추가
   const [hasToken, setHasToken] = useState(false);
   const [AuthRole, setAuthRole] = useState('');
+
+  const [viewMessageModal, setViewMessageModal] = useState(false);
 
   const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
   const joonRole = import.meta.env.VITE_JOON_ROLE;
@@ -189,58 +192,58 @@ function MainPage() {
   const [sunPosition, setSunPosition] = useState(calculatePosition());
   const [moonPosition, setMoonPosition] = useState(calculatePosition());
 
-  let eventSource = null; // EventSource 객체를 위한 전역 변수
+  // let eventSource = null; // EventSource 객체를 위한 전역 변수
   let intervalTime = null;
 
   // 탭이 활성화될 때 서버로부터 시간을 가져오는 함수
-  const fetchServerTime = () => {
-    if (eventSource) {
-      eventSource.close(); // 기존 연결이 있다면 닫기
-    }
+  // const fetchServerTime = () => {
+  //   if (eventSource) {
+  //     eventSource.close(); // 기존 연결이 있다면 닫기
+  //   }
 
-    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
+  //   eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
-    eventSource.onmessage = (e) => {
-      const serverTime = moment(JSON.parse(e.data).unixTime);
+  //   eventSource.onmessage = (e) => {
+  //     const serverTime = moment(JSON.parse(e.data).unixTime);
 
-      // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
-      const clientTime = new Date();
+  //     // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
+  //     const clientTime = new Date();
 
-      // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
-      // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-      // const krCurr = moment().tz('Asia/Seoul');
+  //     // const utc = clientTime.getTime() + clientTime.getTimezoneOffset() * 60 * 1000;
+  //     // const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  //     // const krCurr = moment().tz('Asia/Seoul');
 
-      const timeGap = serverTime - clientTime.getTime();
-      console.log(timeGap);
+  //     const timeGap = serverTime - clientTime.getTime();
+  //     console.log(timeGap);
 
-      setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
+  //     setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
 
-      if (intervalTime) {
-        clearInterval(intervalTime);
-      }
+  //     if (intervalTime) {
+  //       clearInterval(intervalTime);
+  //     }
 
-      intervalTime = setInterval(() => {
-        setCurrentTime((prevTime) => {
-          // prevTime을 밀리초 단위로 변환
-          const prevTimeMillis = prevTime.valueOf();
+  //     intervalTime = setInterval(() => {
+  //       setCurrentTime((prevTime) => {
+  //         // prevTime을 밀리초 단위로 변환
+  //         const prevTimeMillis = prevTime.valueOf();
 
-          // 1초 (1000 밀리초)와 timeGap을 더함
-          const newTimeMillis = prevTimeMillis + 1000;
+  //         // 1초 (1000 밀리초)와 timeGap을 더함
+  //         const newTimeMillis = prevTimeMillis + 1000;
 
-          // moment를 사용하여 한국 시간대의 Date 객체로 변환
-          return moment(newTimeMillis).tz('Asia/Seoul');
-        });
-      }, 1000);
-    };
+  //         // moment를 사용하여 한국 시간대의 Date 객체로 변환
+  //         return moment(newTimeMillis).tz('Asia/Seoul');
+  //       });
+  //     }, 1000);
+  //   };
 
-    eventSource.onerror = (e) => {
-      eventSource.close();
-      // 에러 처리 로직
-    };
-  };
+  //   eventSource.onerror = (e) => {
+  //     eventSource.close();
+  //     // 에러 처리 로직
+  //   };
+  // };
 
   useEffect(() => {
-    fetchServerTime();
+    // fetchServerTime();
 
     // 매초 시간 업데이트
     intervalTime = setInterval(() => {
@@ -262,26 +265,26 @@ function MainPage() {
     // }, 5000);
 
     // 탭 활성화 감지
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        if (eventSource) {
-          // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
-          eventSource.close();
-          fetchServerTime();
-        }
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // const handleVisibilityChange = () => {
+    //   if (document.visibilityState === 'visible') {
+    //     if (eventSource) {
+    //       // 이벤트 소스가 이미 존재하지 않을 때만 새로운 연결을 생성
+    //       eventSource.close();
+    //       fetchServerTime();
+    //     }
+    //   }
+    // };
+    // document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // 정리
+    // // 정리
     return () => {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      if (eventSource) {
-        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
-      }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      // if (eventSource) {
+      //   eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      // }
+      // document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -353,8 +356,16 @@ function MainPage() {
   //   updateBackgroundColor(); // 배경색 업데이트
   // };
   const [showAndrew, setShowAndrew] = useState(false);
+  const [andrewPosition, setAndrewPosition] = useState({
+    left: '50%',
+    top: '50%',
+  });
 
-  const handleMoonClick = () => {
+  const handleMoonClick = (type) => {
+    // 'sun' 또는 'moon'에 따라 위치 설정
+    const position = type === 'sun' ? sunPosition : moonPosition;
+    setAndrewPosition(position);
+
     setShowAndrew(true);
     setTimeout(() => {
       setShowAndrew(false);
@@ -362,7 +373,7 @@ function MainPage() {
   };
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div
         style={{ backgroundImage: backgroundColor }}
         className="relative w-full h-screen first-page">
@@ -378,7 +389,7 @@ function MainPage() {
               transform: 'translate(-50%, -50%)',
               zIndex: 10,
             }}
-            onClick={handleMoonClick}
+            onClick={() => handleMoonClick('sun')}
             alt="Sun"
             draggable="false"
           />
@@ -396,7 +407,7 @@ function MainPage() {
               cursor: 'pointer',
               zIndex: 10,
             }}
-            onClick={handleMoonClick}
+            onClick={() => handleMoonClick('moon')}
             alt="Moon"
             draggable="false"
           />
@@ -484,7 +495,9 @@ function MainPage() {
             </div>
           ))}
 
-        {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
+        {hasToken && !viewMessageModal && (
+          <MessageBtn handleOpenMessage={handleOpenMessage} />
+        )}
         {openMessage && hasToken && (
           <MessageModal
             handleOpenMessage={handleOpenMessage}
@@ -492,10 +505,10 @@ function MainPage() {
           />
         )}
 
-        <div className="">
+        <div className="absolute bottom-0 left-0 right-0">
           <img
             src={snowfield}
-            className="absolute bottom-0 z-0 w-full"
+            className="object-cover w-full h-auto"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -528,7 +541,7 @@ function MainPage() {
         />
       )}
 
-      <ClockTest />
+      <ClockTest setViewMessageModal={setViewMessageModal} />
 
       {showAndrew && (
         <img
@@ -536,16 +549,16 @@ function MainPage() {
           className="fade-out"
           style={{
             position: 'absolute',
-            left: moonPosition.left,
-            top: moonPosition.top,
+            left: andrewPosition.left,
+            top: andrewPosition.top,
             width: '180px',
             transform: 'translate(-50%, -50%)',
-            opacity: 0.5, // 투명도 설정
+            opacity: 0.5,
           }}
           alt="Andrew"
         />
       )}
-    </>
+    </div>
   );
 }
 

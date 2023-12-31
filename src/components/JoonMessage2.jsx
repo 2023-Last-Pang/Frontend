@@ -22,7 +22,7 @@ function JoonMessage2() {
         tabIndex={0}
         onClick={handleImageClick}
         className="w-[13vw] cursor-pointer">
-        <img src={snowman3} alt="Snowman" />
+        <img src={snowman3} alt="Snowman" draggable="false" />
         {isClicked && (
           <div className="absolute right-0 top-[-85%] z-20 aspect-square h-auto w-[24vw] md:top-[-85%] md:w-[24vw] ">
             <img src={message2} alt="Message" className="h-full w-full" />

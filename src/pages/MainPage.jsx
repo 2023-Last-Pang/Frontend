@@ -330,7 +330,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="first-page scrollbar-hide relative h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -344,6 +344,7 @@ function MainPage() {
             }}
             onClick={handleMoonClick}
             alt="Sun"
+            draggable="false"
           />
         )}
         {/* 달 이미지 */}
@@ -360,25 +361,42 @@ function MainPage() {
             }}
             onClick={handleMoonClick}
             alt="Moon"
+            draggable="false"
           />
         )}
-        {!hasToken && (
+        {/* 낮 시간 */}
+        {!hasToken && currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
-            <p className="mr-3 text-white font-omyu_pretty">
+            <p className="mr-3 font-omyu_pretty text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="z-10 link-style font-omyu_pretty"
+              className="link-style z-10 font-omyu_pretty text-blue-700"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
           </div>
         )}
+        {/* 밤 시간 */}
+        {!hasToken &&
+          (currentTime.hours() >= 18 || currentTime.hours() < 6) && (
+            <div className="flex items-center justify-center p-5 font-omyu_pretty">
+              <p className="mr-3 font-omyu_pretty text-white">
+                메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
+              </p>
+              <button
+                type="button"
+                className="link-style z-10 font-omyu_pretty"
+                onClick={() => handleOpenAuthentication()}>
+                인증 코드 입력
+              </button>
+            </div>
+          )}
 
         {hasToken && (
           <div className="flex justify-end text-lg">
-            <p className="flex p-5 text-white font-omyu_pretty">
+            <p className="flex p-5 font-omyu_pretty text-white">
               {AuthRole}
               <MdLogout
                 className="mt-1 ml-5 cursor-pointer"

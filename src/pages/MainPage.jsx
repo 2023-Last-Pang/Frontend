@@ -28,6 +28,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+
 import andrew from '../assets/images/andrew.png';
 import Footer from '../components/Footer';
 
@@ -337,7 +338,7 @@ function MainPage() {
   };
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div
         style={{ backgroundImage: backgroundColor }}
         className="relative w-full h-screen overflow-hidden first-page scrollbar-hide">
@@ -467,10 +468,10 @@ function MainPage() {
           />
         )}
 
-        <div>
+        <div className="absolute bottom-0 left-0 right-0">
           <img
             src={snowfield}
-            className="absolute bottom-0 z-0 w-full"
+            className="object-cover w-full h-auto"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -520,7 +521,7 @@ function MainPage() {
           alt="Andrew"
         />
       )}
-    </>
+    </div>
   );
 }
 

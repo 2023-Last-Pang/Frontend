@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 /* eslint-disable default-param-last */
@@ -5,6 +8,7 @@
 /* eslint-disable no-bitwise */
 import React, { useEffect, useRef, useState } from 'react';
 import backgroundImage from '../assets/images/newyearbg2.png'; // 이미지의 실제 경로에 맞게 수정해야 합니다.
+import joonAudio from '../assets/audio/joon_newyear.mp3';
 
 class Particle {
   static PARTICLE_INITIAL_SPEED = 4.5; // 정적 멤버로 선언
@@ -233,13 +237,48 @@ function Fireworks() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const myRef = useRef(null);
+  const [play, setPlay] = useState(false);
+  // 재생
+  const handleScreenClick = () => {
+    // 오디오 재생
+    if (myRef.current && !play) {
+      myRef.current.play();
+      setPlay(true);
+
+      // 4초 후에 정지
+      setTimeout(() => {
+        if (myRef.current) {
+          myRef.current.pause();
+          setPlay(false);
+        }
+      }, 4000);
+    }
+  };
+
+  useEffect(() => {
+    if (!myRef.current) return;
+    if (play) {
+      myRef.current.play();
+    }
+  }, []);
+
   return (
     <div
+      onClick={handleScreenClick}
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         position: 'relative',
       }}>
+      <audio
+        ref={myRef}
+        src={joonAudio}
+        controls
+        loop
+        style={{ display: 'none' }}
+      />
       <canvas ref={canvasRef} onClick={handleClick} />
     </div>
   );

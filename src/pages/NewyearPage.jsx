@@ -144,7 +144,7 @@ function getAnimationSettings(angle, originX) {
   };
 }
 
-export default function SchoolPride() {
+export default function SchoolPride(callback, deps) {
   const refAnimationInstance = useRef(null);
   const [intervalId, setIntervalId] = useState();
 
@@ -165,6 +165,12 @@ export default function SchoolPride() {
     }
   }, [nextTickAnimation, intervalId]);
 
+  const playJoonAudio = useCallback(() => {
+    console.log('playJoonAudio');
+    const audio = new Audio('/audio/joon.mp3');
+    audio.play();
+  }, []);
+
   // const pauseAnimation = useCallback(() => {
   //   clearInterval(intervalId);
   //   setIntervalId(null);
@@ -184,6 +190,7 @@ export default function SchoolPride() {
 
   useEffect(() => {
     startAnimation(); // 페이지에 처음 접속했을 때 애니메이션 자동 시작
+    playJoonAudio(); //  페이지에 처음 접속했을 때 음성메세지 자동 시작
     return () => {
       clearInterval(intervalId);
     };

@@ -320,7 +320,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="first-page scrollbar-hide h-screen w-full overflow-hidden">
+        className="first-page scrollbar-hide relative h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img

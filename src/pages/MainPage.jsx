@@ -40,6 +40,8 @@ function MainPage() {
   const [hasToken, setHasToken] = useState(false);
   const [AuthRole, setAuthRole] = useState('');
 
+  const [viewMessageModal, setViewMessageModal] = useState(false);
+
   const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
   const joonRole = import.meta.env.VITE_JOON_ROLE;
 
@@ -318,8 +320,16 @@ function MainPage() {
   //   updateBackgroundColor(); // 배경색 업데이트
   // };
   const [showAndrew, setShowAndrew] = useState(false);
+  const [andrewPosition, setAndrewPosition] = useState({
+    left: '50%',
+    top: '50%',
+  });
 
-  const handleMoonClick = () => {
+  const handleMoonClick = (type) => {
+    // 'sun' 또는 'moon'에 따라 위치 설정
+    const position = type === 'sun' ? sunPosition : moonPosition;
+    setAndrewPosition(position);
+
     setShowAndrew(true);
     setTimeout(() => {
       setShowAndrew(false);
@@ -330,7 +340,7 @@ function MainPage() {
     <>
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="first-page scrollbar-hide relative h-screen w-full overflow-hidden">
+        className="relative w-full h-screen overflow-hidden first-page scrollbar-hide">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -342,7 +352,7 @@ function MainPage() {
               width: '200px',
               transform: 'translate(-50%, -50%)',
             }}
-            onClick={handleMoonClick}
+            onClick={() => handleMoonClick('sun')}
             alt="Sun"
             draggable="false"
           />
@@ -359,7 +369,7 @@ function MainPage() {
               transform: 'translate(-50%, -50%)',
               cursor: 'pointer',
             }}
-            onClick={handleMoonClick}
+            onClick={() => handleMoonClick('moon')}
             alt="Moon"
             draggable="false"
           />
@@ -367,12 +377,12 @@ function MainPage() {
         {/* 낮 시간 */}
         {!hasToken && currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <div className="flex items-center justify-center p-5 font-omyu_pretty">
-            <p className="mr-3 font-omyu_pretty text-white">
+            <p className="mr-3 text-white font-omyu_pretty">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
             <button
               type="button"
-              className="link-style z-10 font-omyu_pretty text-blue-700"
+              className="z-10 text-blue-700 link-style font-omyu_pretty"
               onClick={() => handleOpenAuthentication()}>
               인증 코드 입력
             </button>
@@ -382,12 +392,12 @@ function MainPage() {
         {!hasToken &&
           (currentTime.hours() >= 18 || currentTime.hours() < 6) && (
             <div className="flex items-center justify-center p-5 font-omyu_pretty">
-              <p className="mr-3 font-omyu_pretty text-white">
+              <p className="mr-3 text-white font-omyu_pretty">
                 메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
               </p>
               <button
                 type="button"
-                className="link-style z-10 font-omyu_pretty"
+                className="z-10 link-style font-omyu_pretty"
                 onClick={() => handleOpenAuthentication()}>
                 인증 코드 입력
               </button>
@@ -396,7 +406,7 @@ function MainPage() {
 
         {hasToken && (
           <div className="flex justify-end text-lg">
-            <p className="flex p-5 font-omyu_pretty text-white">
+            <p className="flex p-5 text-white font-omyu_pretty">
               {AuthRole}
               <MdLogout
                 className="mt-1 ml-5 cursor-pointer"
@@ -447,7 +457,9 @@ function MainPage() {
             </div>
           ))}
 
-        {hasToken && <MessageBtn handleOpenMessage={handleOpenMessage} />}
+        {hasToken && !viewMessageModal && (
+          <MessageBtn handleOpenMessage={handleOpenMessage} />
+        )}
         {openMessage && hasToken && (
           <MessageModal
             handleOpenMessage={handleOpenMessage}
@@ -455,7 +467,7 @@ function MainPage() {
           />
         )}
 
-        <div className="">
+        <div>
           <img
             src={snowfield}
             className="absolute bottom-0 z-0 w-full"
@@ -491,7 +503,7 @@ function MainPage() {
         />
       )}
 
-      <ClockTest />
+      <ClockTest setViewMessageModal={setViewMessageModal} />
 
       {showAndrew && (
         <img
@@ -499,11 +511,11 @@ function MainPage() {
           className="fade-out"
           style={{
             position: 'absolute',
-            left: moonPosition.left,
-            top: moonPosition.top,
+            left: andrewPosition.left,
+            top: andrewPosition.top,
             width: '180px',
             transform: 'translate(-50%, -50%)',
-            opacity: 0.5, // 투명도 설정
+            opacity: 0.5,
           }}
           alt="Andrew"
         />

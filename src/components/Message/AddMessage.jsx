@@ -29,6 +29,11 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
           handleOpenMessage();
         });
     } catch (error) {
+      if (error.response.status === 401) {
+        alert('세션이 만료되었습니다. 다시 로그인해주세요!');
+        localStorage.clear();
+        window.location.reload();
+      }
       alert(error.response.data.errors[0].constraints.maxLength);
     }
   };
@@ -42,7 +47,7 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
   }
 
   return (
-    <div className="mt-5 p-8">
+    <div className="p-8 mt-5">
       <input
         type="text"
         placeholder="작성자"
@@ -53,8 +58,9 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
       <br />
 
       <textarea
-        placeholder="내용"
+        placeholder="내용 (최대 150자)"
         value={message}
+        maxLength={150} // 최대 길이를 150자로 설정
         onChange={(e) => handleMessage(e.target.value)}
         className="align-center font-omyu_pretty mt-1 h-40 w-64 resize-none border p-1 text-xl outline-[#f1c1c1]"
       />
@@ -62,14 +68,14 @@ export default function AddMessage({ handleOpenMessage, addMessage }) {
       <div className="flex justify-end">
         <button
           type="button"
-          className="mr-3 h-8 rounded bg-white px-4 py-1 text-sm text-[#e26a68] shadow-md hover:bg-[#e7e7e7]"
+          className="font-omyu_pretty mr-3 h-8 rounded bg-white px-4 py-1 text-sm text-[#e26a68] shadow-md hover:bg-[#e7e7e7]"
           onClick={() => handleOpenMessage()}>
           취소
         </button>
 
         <button
           type="submit"
-          className="h-8 rounded bg-[#e26a68] px-4 py-1 text-sm text-white shadow-md hover:bg-[#c25a58]"
+          className="font-omyu_pretty h-8 rounded bg-[#e26a68] px-4 py-1 text-sm text-white shadow-md hover:bg-[#c25a58]"
           onClick={() => handleSubmit()}>
           작성 완료
         </button>

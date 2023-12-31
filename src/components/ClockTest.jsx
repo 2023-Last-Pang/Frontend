@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unreachable */
 /* eslint-disable react/no-unknown-property */
@@ -10,8 +11,9 @@ import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 import moment from 'moment';
 import 'moment-timezone';
+import apiV1Instance from '../apiV1Instance';
 
-function ClockTest() {
+function ClockTest({ setViewMessageModal }) {
   const [timeDifference, setTimeDifference] = useState('');
   const [startCountDown, setStartCountDown] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -45,15 +47,15 @@ function ClockTest() {
     const countSeconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     // 현재 시간
-    const days = now.date();
+    // const days = now.date();
     const hours = now.hours();
     const minutes = now.minutes();
     const seconds = now.seconds();
 
     setTimeDifference(
-      `${days} / ${padWithZero(hours)} : ${padWithZero(
-        minutes,
-      )} : ${padWithZero(seconds)}`,
+      `${padWithZero(hours)} : ${padWithZero(minutes)} : ${padWithZero(
+        seconds,
+      )}`,
     );
 
     if (
@@ -63,6 +65,7 @@ function ClockTest() {
       countSeconds <= 10
     ) {
       setStartCountDown(true);
+      setViewMessageModal(true);
     }
 
     // 0초가 되면 '/' 페이지로 이동
@@ -94,12 +97,11 @@ function ClockTest() {
       eventSource.close(); // 기존 연결이 있다면 닫기
     }
 
-    eventSource = new EventSource(
-      'https://lastpang-backend.fly.dev/api/v1/sse/time',
-    );
+    eventSource = new EventSource(`${apiV1Instance.defaults.baseURL}/sse/time`);
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
+      console.log(`서버 시간: ${moment(serverTime).tz('Asia/Seoul')}`);
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();
@@ -111,7 +113,7 @@ function ClockTest() {
       const timeGap = serverTime - clientTime.getTime();
       console.log(timeGap);
 
-      setCurrentTime(moment(serverTime + timeGap).tz('Asia/Seoul'));
+      setCurrentTime(moment(serverTime + timeGap + 99).tz('Asia/Seoul'));
 
       if (intervalTime) {
         clearInterval(intervalTime);
@@ -162,7 +164,13 @@ function ClockTest() {
     // 탭 활성화 감지
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
+        // 탭이 활성화되면 서버 시간을 다시 가져옵니다.
         fetchServerTime();
+      } else if (document.visibilityState === 'hidden') {
+        // 탭이 비활성화되면 EventSource 연결을 닫습니다.
+        if (eventSource) {
+          eventSource.close();
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -172,7 +180,9 @@ function ClockTest() {
       if (intervalTime) {
         clearInterval(intervalTime);
       }
-      // clearInterval(serverTimeUpdateInterval);
+      if (eventSource) {
+        eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
@@ -188,12 +198,12 @@ function ClockTest() {
     <>
       {/* 카운트다운 */}
       {startCountDown != true && (
-        <motion.span className="absolute left-1/2 top-80 flex -translate-x-1/2 -translate-y-1/2 transform bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+        <motion.span className="absolute left-1/2 top-80 flex w-full -translate-x-1/2 -translate-y-1/2 transform justify-center bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
           {timeDifference}
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{

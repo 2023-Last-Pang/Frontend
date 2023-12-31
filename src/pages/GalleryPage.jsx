@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 // prettier-ignore
 // 이미지 import
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import gallery1 from '../../public/img/April/gallery1.jpg';
 import gallery2 from '../../public/img/Ideaton/gallery2.jpg';
@@ -67,7 +67,6 @@ const galleryData = [
       아이디어톤_1,
       아이디어톤_2,
       아이디어톤_3,
-      아이디어톤_3,
       아이디어톤_4,
       아이디어톤_5,
       아이디어톤_6,
@@ -114,38 +113,30 @@ export default function GalleryPage() {
     setModalIsOpen(!modalIsOpen);
   };
 
-  useEffect(() => {
-    const toggleScroll = (isModalOpen) => {
-      document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
-    };
-
-    // 모달 상태 변경 감지
-    toggleScroll(modalIsOpen);
-
-    // 컴포넌트가 언마운트 될 때 스크롤을 다시 허용
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [modalIsOpen]);
-
   return (
-    <div className="flex items-center justify-center h-screen p-6">
-      <div className="grid grid-cols-3 grid-rows-2 gap-6">
+    <div className="flex h-screen flex-col items-center justify-center bg-[#EEF0F4]">
+      {/* 제목 */}
+      <div className="mb-6 font-omyu_pretty text-4xl">
+        <span>{'< 2023 테커 갤러리 >'}</span>
+      </div>
+
+      <div className="grid grid-cols-3 grid-rows-2 gap-6 p-6">
         {galleryData.map((gallery, index) => (
           <div
             key={index}
-            className="relative transition duration-300 ease-in-out transform bg-white cursor-pointer opacity-70 hover:scale-105"
+            className="relative transform cursor-pointer bg-white opacity-70 transition duration-300 ease-in-out hover:scale-105"
             onClick={() => handleImageClick(gallery.images)}>
             {/* 갤러리 대표 이미지 띄우기 */}
             <img
               src={gallery.image}
               loading="lazy"
-              className="object-cover w-full h-64 rounded-lg"
+              className="h-64 w-full rounded-lg object-cover"
+              draggable="false"
             />
 
             {/* 갤러리 제목 띄우기 */}
             <div
-              className="absolute bottom-0 left-0 w-full p-5 bg-black bg-opacity-50 rounded"
+              className="absolute bottom-0 left-0 w-full rounded bg-black bg-opacity-50 p-5"
               style={{
                 background:
                   'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
@@ -160,7 +151,7 @@ export default function GalleryPage() {
 
       {/* 갤러리 모달 */}
       {modalIsOpen && (
-        <div className="fixed z-10 flex items-center justify-center w-screen h-screen">
+        <div className="fixed z-10 flex h-screen w-screen items-center justify-center">
           <Slider setModalIsOpen={setModalIsOpen} images={activeSlider} />
         </div>
       )}

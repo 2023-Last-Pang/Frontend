@@ -30,8 +30,8 @@
 }
 
 .new-message {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background-color: yellow;
   animation:
@@ -49,19 +49,17 @@
   white-space: pre-wrap;
 }
 
-a {
-  padding-top: 70px;
-}
 a span {
   position: absolute;
+  z-index: 3;
   bottom: 0;
   left: 50%;
   width: 24px;
   height: 24px;
   margin-bottom: 50px;
   margin-left: -12px;
-  border-left: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+  border-left: 1px solid rgb(0, 0, 0);
+  border-bottom: 1px solid rgb(0, 0, 0);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
   -webkit-animation: sdb 1.5s infinite;
@@ -93,4 +91,17 @@ a span {
     transform: rotate(-45deg) translate(-20px, 20px);
     opacity: 0;
   }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 2s ease-out;
 }

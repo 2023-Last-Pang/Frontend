@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable prettier/prettier */
 import RetryAuth from '../Authentication/RetryAuth';
 import AddMessage from './AddMessage';
@@ -12,9 +14,19 @@ export default function MessageModal({
   const techeerRole = import.meta.env.VITE_TECHEER_ROLE;
   const joonRole = import.meta.env.VITE_JOON_ROLE;
 
+  // 모달 바깥쪽 클릭 시 닫히게 하는 함수
+  const handleClickMessageOutside = (event) => {
+    if (event.target.id === 'messageOutside') {
+      closeModal();
+    }
+  };
+
   if (message) {
     return (
-      <div className="fixed top-0 left-0 z-20 flex items-center justify-center w-full h-screen text-center bg-black bg-opacity-20">
+      <div
+        id="messageOutside"
+        onClick={handleClickMessageOutside}
+        className="fixed top-0 left-0 z-20 flex items-center justify-center w-screen h-screen text-center bg-black bg-opacity-20">
         <div className="flex flex-col justify-center bg-cover h-80 w-80 bg-message-image">
           <div className="relative p-10 mt-5 ">
             <div className="flex flex-col items-center justify-center overflow-auto font-omyu_pretty h-52 w-60">

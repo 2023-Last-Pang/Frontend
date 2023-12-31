@@ -194,7 +194,7 @@ function ClockTest() {
   }, [currentTime]);
 
   return (
-    <>
+    <div>
       {/* 카운트다운 */}
       {startCountDown != true && (
         <motion.span className="absolute left-1/2 top-80 flex w-full -translate-x-1/2 -translate-y-1/2 transform justify-center bg-gradient-to-tr from-[#e3e3e3] to-[#f9f9f9] bg-clip-text font-Taebaek text-3xl tracking-[9px] text-transparent sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
@@ -216,7 +216,7 @@ function ClockTest() {
           </motion.span>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

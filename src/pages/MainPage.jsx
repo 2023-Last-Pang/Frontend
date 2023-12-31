@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-alert */
@@ -27,6 +28,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+import andrew from '../assets/images/andrew.png';
 import Footer from '../components/Footer';
 
 function MainPage() {
@@ -315,6 +317,14 @@ function MainPage() {
   //   setCurrentTime(newTime); // 상태 업데이트
   //   updateBackgroundColor(); // 배경색 업데이트
   // };
+  const [showAndrew, setShowAndrew] = useState(false);
+
+  const handleMoonClick = () => {
+    setShowAndrew(true);
+    setTimeout(() => {
+      setShowAndrew(false);
+    }, 2000); // 2초 후에 setShowAndrew(false)를 호출하여 상태 업데이트
+  };
 
   return (
     <>
@@ -332,6 +342,7 @@ function MainPage() {
               width: '200px',
               transform: 'translate(-50%, -50%)',
             }}
+            onClick={handleMoonClick}
             alt="Sun"
             draggable="false"
           />
@@ -346,7 +357,9 @@ function MainPage() {
               top: moonPosition.top,
               width: '180px',
               transform: 'translate(-50%, -50%)',
+              cursor: 'pointer',
             }}
+            onClick={handleMoonClick}
             alt="Moon"
             draggable="false"
           />
@@ -386,7 +399,7 @@ function MainPage() {
             <p className="flex p-5 font-omyu_pretty text-white">
               {AuthRole}
               <MdLogout
-                className="ml-5 mt-1 cursor-pointer"
+                className="mt-1 ml-5 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>
@@ -479,6 +492,22 @@ function MainPage() {
       )}
 
       <ClockTest />
+
+      {showAndrew && (
+        <img
+          src={andrew}
+          className="fade-out"
+          style={{
+            position: 'absolute',
+            left: moonPosition.left,
+            top: moonPosition.top,
+            width: '180px',
+            transform: 'translate(-50%, -50%)',
+            opacity: 0.5, // 투명도 설정
+          }}
+          alt="Andrew"
+        />
+      )}
     </>
   );
 }

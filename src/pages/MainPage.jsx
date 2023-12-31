@@ -333,6 +333,7 @@ function MainPage() {
               transform: 'translate(-50%, -50%)',
             }}
             alt="Sun"
+            draggable="false"
           />
         )}
         {/* 달 이미지 */}
@@ -347,6 +348,7 @@ function MainPage() {
               transform: 'translate(-50%, -50%)',
             }}
             alt="Moon"
+            draggable="false"
           />
         )}
         {/* 낮 시간 */}

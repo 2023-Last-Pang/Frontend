@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 export default function Footer() {
   return (
-    <footer className="m-4 -mt-20 bg-white rounded-lg shadow dark:bg-gray-800">
+    <footer className="m-4 -mt-20 bg-white rounded-lg shadow ">
       <div className="w-full max-w-screen-xl p-4 mx-auto md:flex md:items-center md:justify-between">
-        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+        <span className="text-sm text-gray-500 sm:text-center ">
           © [Techeer] Team Joon . All Rights Reserved.
         </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 sm:mt-0 dark:text-gray-400">
+        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 sm:mt-0">
           <li>
             <a
               href="https://team-joon.oopy.io/"

@@ -49,9 +49,6 @@
   white-space: pre-wrap;
 }
 
-a {
-  padding-top: 70px;
-}
 a span {
   position: absolute;
   z-index: 3;
@@ -94,4 +91,17 @@ a span {
     transform: rotate(-45deg) translate(-20px, 20px);
     opacity: 0;
   }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 2s ease-out;
 }

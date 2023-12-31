@@ -410,7 +410,7 @@ function MainPage() {
             <p className="flex p-5 text-white font-omyu_pretty">
               {AuthRole}
               <MdLogout
-                className="ml-5 mt-1 cursor-pointer"
+                className="mt-1 ml-5 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>
@@ -471,7 +471,7 @@ function MainPage() {
         <div className="absolute bottom-0 left-0 right-0">
           <img
             src={snowfield}
-            className="h-auto w-full object-cover"
+            className="object-cover w-full h-auto"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -521,7 +521,7 @@ function MainPage() {
           alt="Andrew"
         />
       )}
-    </>
+    </div>
   );
 }
 

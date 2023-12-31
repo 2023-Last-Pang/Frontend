@@ -24,11 +24,11 @@ function JoonMessage1() {
         className="w-[24vw] cursor-pointer">
         <img src={tree} alt="Tree" className="w-full" draggable="false" />
         {isClicked && (
-          <div className="height-[60vh] absolute bottom-[20vh] left-[15%] z-30 aspect-square w-[30vw] font-omyu_pretty">
-            <img src={message} alt="Message" className="h-full w-full" />
+          <div className="height-[60vh] font-omyu_pretty absolute bottom-[20vh] left-[15%] z-30 aspect-square w-[30vw]">
+            <img src={message} alt="Message" className="w-full h-full" />
             <p className="absolute left-[50%] top-[40%] w-[36%] -translate-x-1/2 -translate-y-1/2 transform text-sm leading-6 text-black md:text-lg">
-              23년은 각자에게 특별한 시간이었고, 이제 우리는 꿈을 향해 더 멋진
-              24년을 함께 만들어 나갑시다!
+              여러분이 있어서 23년이 정말 행복했습니다. 꿈을 향해 함께 성장하는
+              24년을 만들어봅시다.
             </p>
             <p className="absolute left-1/2 top-[52%] -translate-x-1/2 transform text-sm text-black md:text-lg">
               - Joon -

@@ -26,6 +26,7 @@ import JoonMessage2 from '../components/JoonMessage2';
 import JoonMessage3 from '../components/JoonMessage3';
 
 import snowfield from '../../public/img/Message/snowfield.png';
+import snowfield2 from '../../public/img/Message/snowfield2.png';
 
 function MainPage() {
   const [openAuthenticationModal, setOpenAuthenticationModal] = useState(false);
@@ -312,10 +313,10 @@ function MainPage() {
   // };
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div
         style={{ backgroundImage: backgroundColor }}
-        className="w-full h-screen overflow-hidden first-page scrollbar-hide">
+        className="first-page scrollbar-hide h-screen w-full overflow-hidden">
         {/* 해 이미지 */}
         {currentTime.hours() >= 6 && currentTime.hours() < 18 && (
           <img
@@ -345,7 +346,7 @@ function MainPage() {
           />
         )}
         {!hasToken && (
-          <div className="flex items-center justify-center p-5 font-omyu_pretty">
+          <div className="font-omyu_pretty flex items-center justify-center p-5">
             <p className="mr-3 text-white">
               메세지를 보시려면 테커인 코드 혹은 팀준 코드를 입력해주세요
             </p>
@@ -363,7 +364,7 @@ function MainPage() {
             <p className="flex p-5 text-white">
               {AuthRole}
               <MdLogout
-                className="mt-1 ml-5 cursor-pointer"
+                className="ml-5 mt-1 cursor-pointer"
                 onClick={handleLogoutClick}
               />
             </p>
@@ -418,10 +419,10 @@ function MainPage() {
             addMessage={addMessage}
           />
         )}
-        <div className="">
+        <div className="absolute bottom-0 left-0 right-0">
           <img
             src={snowfield}
-            className="absolute bottom-0 w-full"
+            className="h-auto w-full object-cover"
             alt="Snowfield Background"
           />
           <div className="z-20 flex flex-row">
@@ -452,7 +453,7 @@ function MainPage() {
       )}
 
       <ClockTest />
-    </>
+    </div>
   );
 }
 

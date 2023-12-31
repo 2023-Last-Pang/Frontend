@@ -8,7 +8,7 @@ body {
 }
 
 body {
-  background: rgba(255, 255, 255, 0.6) !important;
+  background: #eef0f4 !important;
   backdrop-filter: blur(5px);
   font-family:
     Helvetica Neue,
@@ -75,7 +75,8 @@ body {
 .swiper-button-prev:after,
 .swiper-button-next:after {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 600 !important;
+  color: #fff;
 }
 
 .swiper-button-prev:hover,
@@ -89,7 +90,7 @@ body {
   height: 8px;
   display: outside;
   border-radius: 50%;
-  background: #000;
+  background: gray !important;
   opacity: 0.2;
 }
 

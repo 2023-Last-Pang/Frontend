@@ -12,7 +12,7 @@ function JoonMessage2() {
 
     setTimeout(() => {
       setIsClicked(false);
-    }, 2000);
+    }, 3000);
   };
 
   return (

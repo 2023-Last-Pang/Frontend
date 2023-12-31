@@ -36,7 +36,7 @@ function ClockTest({ setViewMessageModal }) {
   const calculateTimeDifference = () => {
     const now = currentTime;
     // const newYear = moment('2024-1-1 00:00:00').tz('Asia/Seoul');
-    const newYear = moment('2023-12-31 21:16:20').tz('Asia/Seoul');
+    const newYear = moment('2023-12-31 21:17:20').tz('Asia/Seoul');
     const diff = newYear - now;
 
     // D-DAY 시간

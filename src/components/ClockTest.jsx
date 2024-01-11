@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCountdown from '@bradgarropy/use-countdown';
 import { motion } from 'framer-motion';
-import Confetti from 'react-confetti';
 import moment from 'moment';
 import 'moment-timezone';
 import apiV1Instance from '../apiV1Instance';
@@ -139,20 +138,40 @@ function ClockTest({ setViewMessageModal }) {
 
   useEffect(() => {
     fetchServerTime();
+    const workerUrl = new URL('../utils/workers/timer.js', import.meta.url)
+      .href;
+    const timerWorker = new Worker(workerUrl, { type: 'module' });
+    const timerDelay = 1000; // 1초
 
     // 매초 시간 업데이트
-    intervalTime = setInterval(() => {
+    // intervalTime = setInterval(() => {
+    //   setCurrentTime((prevTime) => {
+    //     // prevTime을 밀리초 단위로 변환
+    //     const prevTimeMillis = prevTime.valueOf();
+    //
+    //     // 1초 (1000 밀리초)와 timeGap을 더함
+    //     const newTimeMillis = prevTimeMillis + 1000;
+    //
+    //     // moment를 사용하여 한국 시간대의 Date 객체로 변환
+    //     return moment(newTimeMillis).tz('Asia/Seoul');
+    //   });
+    // }, 1000);
+
+    // web worker를 이용한 1초간격 시간 업데이트
+    timerWorker.postMessage(timerDelay);
+    timerWorker.onmessage = () => {
+      console.log('setTime');
       setCurrentTime((prevTime) => {
         // prevTime을 밀리초 단위로 변환
         const prevTimeMillis = prevTime.valueOf();
 
         // 1초 (1000 밀리초)와 timeGap을 더함
-        const newTimeMillis = prevTimeMillis + 1000;
+        const newTimeMillis = prevTimeMillis + timerDelay;
 
         // moment를 사용하여 한국 시간대의 Date 객체로 변환
         return moment(newTimeMillis).tz('Asia/Seoul');
       });
-    }, 1000);
+    };
 
     // 매 5초마다 서버 시간 업데이트
     // const serverTimeUpdateInterval = setInterval(() => {
@@ -182,6 +201,7 @@ function ClockTest({ setViewMessageModal }) {
         eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      return timerWorker.terminate(); // 컴포넌트 정리 시 web worker 종료
     };
   }, []);
 

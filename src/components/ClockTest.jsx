@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCountdown from '@bradgarropy/use-countdown';
 import { motion } from 'framer-motion';
-import Confetti from 'react-confetti';
 import moment from 'moment';
 import 'moment-timezone';
 import apiV1Instance from '../apiV1Instance';
@@ -101,7 +100,6 @@ function ClockTest({ setViewMessageModal }) {
 
     eventSource.onmessage = (e) => {
       const serverTime = moment(JSON.parse(e.data).unixTime);
-      console.log(`서버 시간: ${moment(serverTime).tz('Asia/Seoul')}`);
 
       // 로컬 시간을 전 세계 어디서든 한국시간으로 변환
       const clientTime = new Date();
@@ -111,7 +109,6 @@ function ClockTest({ setViewMessageModal }) {
       // const krCurr = moment().tz('Asia/Seoul');
 
       const timeGap = serverTime - clientTime.getTime();
-      console.log(timeGap);
 
       setCurrentTime(moment(serverTime + timeGap + 99).tz('Asia/Seoul'));
 
@@ -141,20 +138,40 @@ function ClockTest({ setViewMessageModal }) {
 
   useEffect(() => {
     fetchServerTime();
+    const workerUrl = new URL('../utils/workers/timer.js', import.meta.url)
+      .href;
+    const timerWorker = new Worker(workerUrl, { type: 'module' });
+    const timerDelay = 1000; // 1초
 
     // 매초 시간 업데이트
-    intervalTime = setInterval(() => {
+    // intervalTime = setInterval(() => {
+    //   setCurrentTime((prevTime) => {
+    //     // prevTime을 밀리초 단위로 변환
+    //     const prevTimeMillis = prevTime.valueOf();
+    //
+    //     // 1초 (1000 밀리초)와 timeGap을 더함
+    //     const newTimeMillis = prevTimeMillis + 1000;
+    //
+    //     // moment를 사용하여 한국 시간대의 Date 객체로 변환
+    //     return moment(newTimeMillis).tz('Asia/Seoul');
+    //   });
+    // }, 1000);
+
+    // web worker를 이용한 1초간격 시간 업데이트
+    timerWorker.postMessage(timerDelay);
+    timerWorker.onmessage = () => {
+      console.log('setTime');
       setCurrentTime((prevTime) => {
         // prevTime을 밀리초 단위로 변환
         const prevTimeMillis = prevTime.valueOf();
 
         // 1초 (1000 밀리초)와 timeGap을 더함
-        const newTimeMillis = prevTimeMillis + 1000;
+        const newTimeMillis = prevTimeMillis + timerDelay;
 
         // moment를 사용하여 한국 시간대의 Date 객체로 변환
         return moment(newTimeMillis).tz('Asia/Seoul');
       });
-    }, 1000);
+    };
 
     // 매 5초마다 서버 시간 업데이트
     // const serverTimeUpdateInterval = setInterval(() => {
@@ -184,12 +201,12 @@ function ClockTest({ setViewMessageModal }) {
         eventSource.close(); // 컴포넌트 정리 시 EventSource 인스턴스 닫기
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      return timerWorker.terminate(); // 컴포넌트 정리 시 web worker 종료
     };
   }, []);
 
   useEffect(() => {
     if (currentTime) {
-      console.log(`현재 시간: ${currentTime}`);
       calculateTimeDifference();
     }
   }, [currentTime]);
@@ -203,7 +220,7 @@ function ClockTest({ setViewMessageModal }) {
         </motion.span>
       )}
       {startCountDown == true && (
-        <div className="absolute flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
           <motion.span
             initial={{ opacity: 0, scale: 0.1 }}
             animate={{
